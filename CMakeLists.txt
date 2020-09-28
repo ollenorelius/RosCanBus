@@ -31,7 +31,7 @@ target_include_directories( ${PROJECT_NAME} PUBLIC
 )
 
 target_link_libraries( ${PROJECT_NAME} PUBLIC 
-    ${CMAKE_CURRENT_LIST_DIR}/lib/xlnt/libxlnt.so
+    ${CMAKE_CURRENT_LIST_DIR}/lib/xlnt/build/source/libxlnt.so
 )
 
 
