@@ -13,7 +13,7 @@ std::unique_ptr<std::map<int, SignalDefinition>> SignalReader::getSignalDefiniti
     auto rows = worksheet.rows();
     for (auto row : rows)
     {
-        signalDefinitions.insert(std::pair(row[static_cast<int>(COLUMNS::ID)].value<int>(), createSignalDefinition(row)));
+        signalDefinitions.insert(std::pair<int, SignalDefinition>(row[static_cast<int>(COLUMNS::ID)].value<int>(), createSignalDefinition(row)));
     }
 
     return std::make_unique<std::map<int, SignalDefinition>>(signalDefinitions);

@@ -21,7 +21,7 @@ std::unique_ptr<std::map<int, Frame>> FrameReader::getRxFrames(std::string selfI
                 {
                     std::string id = row[ID].value<std::string>();
                     int fid = std::stoi(id, nullptr, 0);
-                    rxFrames.insert( std::pair(fid, createDBCanFrame(row)));
+                    rxFrames.insert( std::pair<int, Frame>(fid, createDBCanFrame(row)));
                 }
                 catch (std::invalid_argument e)
                 {
@@ -49,7 +49,7 @@ std::unique_ptr<std::map<int, Frame>> FrameReader::getTxFrames(std::string selfI
                 {
                     std::string id = row[ID].value<std::string>();
                     int fid = std::stoi(id, nullptr, 0);
-                    txFrames.insert( std::pair(fid, createDBCanFrame(row)));
+                    txFrames.insert( std::pair<int, Frame>(fid, createDBCanFrame(row)));
                 }
                 catch (std::invalid_argument e)
                 {
