@@ -11,14 +11,14 @@ namespace Interfaces
         CAN();
         ~CAN();
 
-        FrameData getLatestCanFrame();
-
+        FrameData getLatestCanFrame() const;
+        void readCanFrame();
+        EventSignal* getRxCanEvent() const;
 
     private:
         void init();
         void deinit();
 
-        void readCanFrame();
         std::unique_ptr<EventSignal> rxCanEvent_;
         int socketFd_;
         FrameData lastCanFrame_;

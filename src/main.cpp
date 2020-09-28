@@ -23,6 +23,13 @@ int main()
     CanGwInterfaces canGwInterfaces(canGwModel.get());
     CanGwController canGwController(canGwModel.get(), &canGwInterfaces);
 
+    canGwInterfaces.getCanInterface()->getRxCanEvent()->connect([&canGwInterfaces](){
+        std::cout << canGwInterfaces.getCanInterface()->getLatestCanFrame().data[0] << std::endl;
+    });
+    while (1)
+    {
+        canGwInterfaces.getCanInterface()->readCanFrame();
+    }
 
     return 0;
 }

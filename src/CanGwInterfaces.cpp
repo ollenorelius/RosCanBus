@@ -5,7 +5,12 @@ CanGwInterfaces::CanGwInterfaces(CanGwModel* canGwModel)
     canInterface_ = std::make_unique<Interfaces::CAN>();
 }
 
-Interfaces::CAN* CanGwInterfaces::getCanInterface() 
+CanGwInterfaces::~CanGwInterfaces() 
+{
+    
+}
+
+Interfaces::CAN* CanGwInterfaces::getCanInterface() const
 {
     return canInterface_.get();
 }
