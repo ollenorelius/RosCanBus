@@ -9,6 +9,7 @@ Building the project is a bit awkward atm, since I'm bad at CMake.
 First you need to build the lib:
 - cd lib/xlnt
 - mkdir build
+- cd build
 - cmake ..
 - make -j4
 
