@@ -6,14 +6,14 @@
 #include <memory>
 
 
-int main()
+int main(int argc, char** argv)
 {
     std::cout << "Can GW v0.0\n";
 
     std::unique_ptr<CanGwModel> canGwModel;
     try 
     {
-        canGwModel = std::make_unique<CanGwModel>();
+        canGwModel = std::make_unique<CanGwModel>(argc, argv);
     }
     catch (xlnt::exception e)
     {

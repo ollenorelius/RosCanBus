@@ -16,8 +16,10 @@ ${CMAKE_CURRENT_LIST_DIR}/src/CanDB/SignalDefinition.cpp
 ${CMAKE_CURRENT_LIST_DIR}/src/CanDB/FrameReader.cpp
 ${CMAKE_CURRENT_LIST_DIR}/src/CanDB/SignalReader.cpp
 ${CMAKE_CURRENT_LIST_DIR}/src/Interfaces/CAN.cpp
+${CMAKE_CURRENT_LIST_DIR}/src/Interfaces/RosPublisher.cpp
 ${CMAKE_CURRENT_LIST_DIR}/src/EventSignal.cpp
 ${CMAKE_CURRENT_LIST_DIR}/src/Controllers/FrameToSignalsController.cpp
+${CMAKE_CURRENT_LIST_DIR}/src/CommandLineModel.cpp
 
 )
 
@@ -30,6 +32,7 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE ${SOURCES}
 
 target_include_directories( ${PROJECT_NAME} PUBLIC 
     $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/lib/xlnt/include>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/lib/ros_comm-melodic-devel/clients/roscpp/include>
 )
 
 target_link_libraries( ${PROJECT_NAME} PUBLIC 
@@ -42,7 +45,9 @@ add_executable(${CANSENDER})
 target_sources(${CANSENDER} PRIVATE ${CMAKE_CURRENT_LIST_DIR}/test/cansender.cpp)
 
 add_executable(test)
-target_include_directories(test PRIVATE ${CMAKE_CURRENT_LIST_DIR}/src)
+target_include_directories(test PRIVATE ${CMAKE_CURRENT_LIST_DIR}/src
+                           $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/lib/ros_comm-melodic-devel/clients/roscpp/include>
+                            )
 target_sources(test PRIVATE
                ${CMAKE_CURRENT_LIST_DIR}/test/test.cpp
                ${SOURCES})
@@ -52,4 +57,5 @@ target_link_libraries( test PUBLIC
 )
 target_include_directories( test PUBLIC 
     $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/lib/xlnt/include>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/lib/ros_comm-melodic-devel/clients/roscpp/include>
 )
