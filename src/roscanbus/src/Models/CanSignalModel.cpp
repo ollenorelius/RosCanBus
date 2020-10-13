@@ -1,7 +1,8 @@
 #include "CanSignalModel.hpp"
 
-CanSignalModel::CanSignalModel(double value, CanSignalDirection direction) :
+CanSignalModel::CanSignalModel(int index, double value, CanSignalDirection direction) :
     value_(0),
+    index_(index),
     timestamp_(0),
     valueChanged_(std::make_unique<EventSignal>()),
     canSignalDirection_(direction)
@@ -22,6 +23,11 @@ void CanSignalModel::setValue(double value)
 double CanSignalModel::getValue() 
 {
     return value_;
+}
+
+int CanSignalModel::getIndex() 
+{
+    return index_;
 }
 
 EventSignal* CanSignalModel::getValueChanged() 

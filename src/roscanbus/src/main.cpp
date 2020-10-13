@@ -4,11 +4,13 @@
 #include "CanGwInterfaces.hpp"
 #include "CanGwController.hpp"
 #include <memory>
+#include "ros/ros.h"
 
 
 int main(int argc, char** argv)
 {
     std::cout << "Can GW v0.0\n";
+
 
     std::unique_ptr<CanGwModel> canGwModel;
     try 
@@ -26,6 +28,7 @@ int main(int argc, char** argv)
     //canGwInterfaces.getCanInterface()->getRxCanEvent()->connect([&canGwInterfaces](){
     //    std::cout << canGwInterfaces.getCanInterface()->getLatestCanFrame().data[0] << std::endl;
     //});
+    ros::spin();
     while (1)
     {
         canGwInterfaces.getCanInterface()->readCanFrame();

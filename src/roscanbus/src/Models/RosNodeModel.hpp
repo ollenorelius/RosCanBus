@@ -1,5 +1,6 @@
 #pragma once
 #include "ros/ros.h"
+#include <memory>
 
 class RosNodeModel
 {
@@ -9,5 +10,5 @@ public:
     ros::NodeHandle* getNodeHandle();
 
 private:
-    ros::NodeHandle nodeHandle_;
+    std::unique_ptr<ros::NodeHandle> nodeHandle_;
 };

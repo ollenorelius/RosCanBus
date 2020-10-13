@@ -1,10 +1,13 @@
 #pragma once 
 
-class CommandLineModel;
+class RosNodeModel;
 
-class RosPublisher
+namespace Interfaces
 {
-public:
-    RosPublisher(CommandLineModel* commandLineModel);
+    class RosPublisher
+    {
+    public:
+        RosPublisher(RosNodeModel* rosNodeModel);
+    };
 
-};
+}

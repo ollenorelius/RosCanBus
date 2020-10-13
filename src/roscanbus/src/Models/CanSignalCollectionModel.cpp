@@ -18,8 +18,9 @@ void CanSignalCollectionModel::setCanSignalValue(int signalId, double value)
 
 void CanSignalCollectionModel::addCanSignal(int signalId, CanSignalDirection direction) 
 {
-    CanSignalModel* canSignalModel = new CanSignalModel(0, direction);
+    CanSignalModel* canSignalModel = new CanSignalModel(signalId, 0, direction);
     canSignals_[signalId] = std::unique_ptr<CanSignalModel>(canSignalModel);
+    lastSignalAdded_ = canSignals_[signalId].get();
 }
 
 std::vector<CanSignalModel*> CanSignalCollectionModel::getTxSignals() 
@@ -48,6 +49,16 @@ std::vector<CanSignalModel*> CanSignalCollectionModel::getRxSignals()
         }
     }
     return rxSignals;
+}
+
+EventSignal* CanSignalCollectionModel::getSignalAddedEvent() 
+{
+    return signalAdded_.get();
+}
+
+CanSignalModel* CanSignalCollectionModel::getLastSignalAdded() 
+{
+    return lastSignalAdded_;
 }
 
 

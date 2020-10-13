@@ -12,12 +12,13 @@ enum class CanSignalDirection
 class CanSignalModel
 {
 public:
-    CanSignalModel(double value, CanSignalDirection direction);
+    CanSignalModel(int index, double value, CanSignalDirection direction);
 
     void setValue(double value);
     void setCanSignalDirection(CanSignalDirection canSignalDirection);
 
     double getValue();
+    int getIndex();
     EventSignal* getValueChanged();
     CanSignalDirection getCanSignalDirection();
 
@@ -25,6 +26,7 @@ public:
 
 private:
     double value_;
+    int index_;
     long timestamp_;
     CanSignalDirection canSignalDirection_;
 

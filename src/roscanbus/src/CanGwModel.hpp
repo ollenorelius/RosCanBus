@@ -8,6 +8,7 @@
 #include "Models/CommandLineModel.hpp"
 #include "Models/CanSignalModel.hpp"
 #include "Models/CanSignalCollectionModel.hpp"
+#include "Models/RosNodeModel.hpp"
 
 
 class CanGwModel
@@ -21,6 +22,7 @@ public:
     std::map<int, Frame>* getTxCanFramesCollectionModel();
     std::map<int, SignalDefinition>* getCanSignalDefinitionCollectionModel();
     CommandLineModel* getCommandLineModel();
+    RosNodeModel* getRosNodeModel();
 
 private:
     std::unique_ptr<CanSignalCollectionModel> canSignalCollectionModel_;
@@ -28,5 +30,7 @@ private:
     std::unique_ptr<std::map<int, Frame>> txCanFramesCollectionModel_;
     std::unique_ptr<std::map<int, SignalDefinition>> canSignalDefinitionCollectionModel_;
     std::unique_ptr<CommandLineModel> commandLineModel_;
+    std::unique_ptr<RosNodeModel> rosNodeModel_;
+
 
 };

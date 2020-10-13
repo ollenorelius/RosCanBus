@@ -4,6 +4,7 @@
 
 CanGwModel::CanGwModel(int argc, char** argv)
 {
+    rosNodeModel_ = std::make_unique<RosNodeModel>(argc, argv);
     FrameReader FrameReader("signaldb.xlsx");
     txCanFramesCollectionModel_ = std::move(FrameReader.getTxFrames("ADAS"));
     rxCanFramesCollectionModel_ = std::move(FrameReader.getRxFrames("ADAS"));
@@ -38,6 +39,11 @@ std::map<int, SignalDefinition>* CanGwModel::getCanSignalDefinitionCollectionMod
 CommandLineModel* CanGwModel::getCommandLineModel() 
 {
     return commandLineModel_.get();
+}
+
+RosNodeModel* CanGwModel::getRosNodeModel() 
+{
+    return rosNodeModel_.get();
 }
 
 CanGwModel::CanGwModel() 
