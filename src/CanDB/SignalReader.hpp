@@ -5,6 +5,7 @@
 #include <map>
 #include "xlnt/xlnt.hpp"
 #include "SignalDefinition.hpp"
+#include "../Models/CanSignalCollectionModel.hpp"
 
 class SignalReader
 {
@@ -12,6 +13,7 @@ class SignalReader
     SignalReader(std::string path);
     
     std::unique_ptr<std::map<int, SignalDefinition>> getSignalDefinitions();
+    std::unique_ptr<CanSignalCollectionModel> createCanSignalCollectionModel();
 
 private:
     SignalDefinition createSignalDefinition(xlnt::cell_vector row);
@@ -27,7 +29,8 @@ private:
         SCALER = 4,
         OFFSET = 5,
         UNIT = 6,
-        DESCRIPTION = 7
+        DESCRIPTION = 7,
+        SOURCE = 8
     };
 
 };

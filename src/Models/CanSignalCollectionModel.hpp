@@ -9,13 +9,12 @@
 class CanSignalCollectionModel
 {
     public:
-    CanSignalCollectionModel() {};
-    CanSignalCollectionModel(std::unique_ptr<std::map<int, CanSignalModel>> canSignalMap);
-    CanSignalCollectionModel(int signalCount);
-    CanSignalCollectionModel(std::vector<int> signalIds);
-    double getCanSignal(int signalId);
-    void setCanSignal(int signalId, std::unique_ptr<CanSignalModel> signal);
+    CanSignalCollectionModel();
+
+    CanSignalModel* getCanSignal(int signalId);
+    void setCanSignalValue(int signalId, double value);
+    void addCanSignal(int signalId, CanSignalDirection direction);
 
 private:
-    std::unique_ptr<std::map<int, CanSignalModel>> canSignals_;
+    std::map<int, std::unique_ptr<CanSignalModel>> canSignals_;
 };

@@ -5,10 +5,11 @@
 #include "../CanDB/SignalDefinition.hpp"
 #include <iostream>
 #include "../EventSignal.hpp"
-#include "../CanSignalModel.hpp"
+#include "../Models/CanSignalModel.hpp"
+#include "../Models/CanSignalCollectionModel.hpp"
 
 FrameToSignalsController::FrameToSignalsController(Interfaces::CAN* canInterface,
-                             std::map<int, CanSignalModel*>* signalCollectionModel,
+                             CanSignalCollectionModel* signalCollectionModel,
                              std::map<int, Frame>* rxCanFramesCollectionModel,
                              std::map<int, SignalDefinition>* canSignalDefinitionCollectionModel) :
     canInterface_(canInterface),
@@ -21,7 +22,7 @@ FrameToSignalsController::FrameToSignalsController(Interfaces::CAN* canInterface
         std::map<int, double> signalValues = decodeCanFrame(canInterface_->getLatestCanFrame());
         for (std::pair<int, double> signal : signalValues)
         {
-            signalCollectionModel_->emplace();
+            signalCollectionModel_->setCanSignalValue(signal.first, signal.second);
         }
     };
     canInterface_->getRxCanEvent()->connect(decodeCanFrameCallback);

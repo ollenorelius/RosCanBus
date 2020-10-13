@@ -8,7 +8,7 @@
 
 #include "../src/CanGwInterfaces.hpp"
 #include "../src/CanGwController.hpp"
-#include "../src/CanSignalModel.hpp"
+#include "../src/Models/CanSignalModel.hpp"
 
 #include <iostream>
 

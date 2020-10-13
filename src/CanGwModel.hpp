@@ -16,7 +16,7 @@ public:
     CanGwModel();
     CanGwModel(int argc, char** argv);
     ~CanGwModel() {};
-    std::map<int, CanSignalModel*> getCanSignalCollectionModel();
+    CanSignalCollectionModel* getCanSignalCollectionModel();
     std::map<int, Frame>* getRxCanFramesCollectionModel();
     std::map<int, Frame>* getTxCanFramesCollectionModel();
     std::map<int, SignalDefinition>* getCanSignalDefinitionCollectionModel();

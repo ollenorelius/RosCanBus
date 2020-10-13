@@ -1,5 +1,6 @@
 
 #include "SignalReader.hpp"
+
 SignalReader::SignalReader(std::string path) 
 {
     document_.load(path);
@@ -17,6 +18,23 @@ std::unique_ptr<std::map<int, SignalDefinition>> SignalReader::getSignalDefiniti
     }
 
     return std::make_unique<std::map<int, SignalDefinition>>(signalDefinitions);
+}
+
+std::unique_ptr<CanSignalCollectionModel> SignalReader::createCanSignalCollectionModel()
+{
+    CanSignalCollectionModel* canSignalCollectionModel = new CanSignalCollectionModel();
+
+    xlnt::worksheet worksheet = document_.sheet_by_title("Signals");
+    auto rows = worksheet.rows();
+    for (auto row : rows)
+    {
+        CanSignalDirection direction = row[static_cast<int>(COLUMNS::SOURCE)].value<std::string>() == "ADAS" ? CanSignalDirection::TX : CanSignalDirection::RX;
+        canSignalCollectionModel->addCanSignal(row[static_cast<int>(COLUMNS::ID)].value<int>(), direction);
+
+        //signalDefinitions.insert(std::pair<int, SignalDefinition>(row[static_cast<int>(COLUMNS::ID)].value<int>(), createSignalDefinition(row)));
+    }
+
+    return std::unique_ptr<CanSignalCollectionModel>(canSignalCollectionModel);
 }
 
 SignalDefinition SignalReader::createSignalDefinition(xlnt::cell_vector row) 

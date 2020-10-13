@@ -1,9 +1,10 @@
 #include "CanSignalModel.hpp"
 
-CanSignalModel::CanSignalModel() :
+CanSignalModel::CanSignalModel(double value, CanSignalDirection direction) :
     value_(0),
     timestamp_(0),
-    valueChanged_(std::make_unique<EventSignal>())
+    valueChanged_(std::make_unique<EventSignal>()),
+    canSignalDirection_(direction)
 
 {
     

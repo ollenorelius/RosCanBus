@@ -7,6 +7,7 @@ class Frame;
 class SignalDefinition;
 class FrameData;
 class CanSignalModel;
+class CanSignalCollectionModel;
 
 namespace Interfaces
 {
@@ -17,7 +18,7 @@ class FrameToSignalsController
 {
     public:
     FrameToSignalsController(Interfaces::CAN* canInterface,
-                             std::map<int, CanSignalModel*>* signalCollectionModel,
+                             CanSignalCollectionModel* signalCollectionModel,
                              std::map<int, Frame>* rxCanFramesCollectionModel,
                              std::map<int, SignalDefinition>* canSignalDefinitionCollectionModel);
 
@@ -26,7 +27,7 @@ class FrameToSignalsController
 private:
 
     Interfaces::CAN* canInterface_;
-    std::map<int, CanSignalModel*>* signalCollectionModel_;
+    CanSignalCollectionModel* signalCollectionModel_;
     std::map<int, Frame>* rxCanFramesCollectionModel_;
     std::map<int, SignalDefinition>* canSignalDefinitionCollectionModel_;
 };

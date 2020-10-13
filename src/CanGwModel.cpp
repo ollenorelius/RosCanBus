@@ -3,7 +3,7 @@
 #include "CanDB/SignalReader.hpp"
 
 CanGwModel::CanGwModel(int argc, char** argv) :
-canSignalCollectionModel_(std::make_unique<std::map<int, std::unique_ptr<CanSignalModel>>>())
+canSignalCollectionModel_(std::make_unique<CanSignalCollectionModel>())
 {
     FrameReader FrameReader("signaldb.xlsx");
     txCanFramesCollectionModel_ = std::move(FrameReader.getTxFrames("ADAS"));
@@ -15,15 +15,9 @@ canSignalCollectionModel_(std::make_unique<std::map<int, std::unique_ptr<CanSign
     commandLineModel_ = std::make_unique<CommandLineModel>(argc, argv);
 }
 
-std::map<int,  CanSignalModel*> CanGwModel::getCanSignalCollectionModel() 
+CanSignalCollectionModel* CanGwModel::getCanSignalCollectionModel() 
 {
-    std::map<int, CanSignalModel*> returnMap;
-
-    for (auto& canSignalModel : *canSignalCollectionModel_.get())
-    {
-        returnMap[canSignalModel.first] = canSignalModel.second.get();
-    }
-    return returnMap;
+    return canSignalCollectionModel_.get();
 }
 
 std::map<int, Frame>* CanGwModel::getRxCanFramesCollectionModel() 

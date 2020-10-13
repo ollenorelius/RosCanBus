@@ -1,20 +1,25 @@
 #include "CanSignalCollectionModel.hpp"
+#include "CanSignalModel.hpp"
 
 CanSignalCollectionModel::CanSignalCollectionModel() 
 {
 }
 
-CanSignalCollectionModel::CanSignalCollectionModel(std::vector<int> signalIds) 
-{
-}
-
-CanSignal* CanSignalCollectionModel::getCanSignal(int signalId) 
+CanSignalModel* CanSignalCollectionModel::getCanSignal(int signalId) 
 {
     return canSignals_.at(signalId).get();
 }
 
-void CanSignalCollectionModel::setCanSignal(int signalId, std::unique_ptr<CanSignal> signal) 
+void CanSignalCollectionModel::setCanSignalValue(int signalId, double value) 
 {
-    canSignals_[signalId] = std::move(signal);
+    canSignals_.at(signalId)->setValue(value);
 }
+
+
+void CanSignalCollectionModel::addCanSignal(int signalId, CanSignalDirection direction) 
+{
+    CanSignalModel* canSignalModel = new CanSignalModel(0, direction);
+    canSignals_[signalId] = std::unique_ptr<CanSignalModel>(canSignalModel);
+}
+
 
