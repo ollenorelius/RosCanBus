@@ -10,16 +10,17 @@ set(SOURCES
 ${CMAKE_CURRENT_LIST_DIR}/src/CanGwModel.cpp
 ${CMAKE_CURRENT_LIST_DIR}/src/CanGwController.cpp
 ${CMAKE_CURRENT_LIST_DIR}/src/CanGwInterfaces.cpp
-#    ${CMAKE_CURRENT_LIST_DIR}/src/CanSignalCollectionModel.cpp
+${CMAKE_CURRENT_LIST_DIR}/src/Models/CanSignalCollectionModel.cpp
 ${CMAKE_CURRENT_LIST_DIR}/src/CanDB/Frame.cpp
 ${CMAKE_CURRENT_LIST_DIR}/src/CanDB/SignalDefinition.cpp
 ${CMAKE_CURRENT_LIST_DIR}/src/CanDB/FrameReader.cpp
 ${CMAKE_CURRENT_LIST_DIR}/src/CanDB/SignalReader.cpp
 ${CMAKE_CURRENT_LIST_DIR}/src/Interfaces/CAN.cpp
-${CMAKE_CURRENT_LIST_DIR}/src/Interfaces/RosPublisher.cpp
+#${CMAKE_CURRENT_LIST_DIR}/src/Interfaces/RosPublisher.cpp
 ${CMAKE_CURRENT_LIST_DIR}/src/EventSignal.cpp
 ${CMAKE_CURRENT_LIST_DIR}/src/Controllers/FrameToSignalsController.cpp
-${CMAKE_CURRENT_LIST_DIR}/src/CommandLineModel.cpp
+${CMAKE_CURRENT_LIST_DIR}/src/Models/CommandLineModel.cpp
+${CMAKE_CURRENT_LIST_DIR}/src/Models/CanSignalModel.cpp
 
 )
 

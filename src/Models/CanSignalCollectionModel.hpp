@@ -3,19 +3,19 @@
 #include <memory>
 #include <vector>
 #include <map>
-#include "CanSignal.hpp"
+#include "CanSignalModel.hpp"
 
 
 class CanSignalCollectionModel
 {
     public:
     CanSignalCollectionModel() {};
-    CanSignalCollectionModel(std::unique_ptr<std::map<int, CanSignal>> canSignalMap);
+    CanSignalCollectionModel(std::unique_ptr<std::map<int, CanSignalModel>> canSignalMap);
     CanSignalCollectionModel(int signalCount);
     CanSignalCollectionModel(std::vector<int> signalIds);
     double getCanSignal(int signalId);
-    void setCanSignal(int signalId, std::unique_ptr<CanSignal> signal);
+    void setCanSignal(int signalId, std::unique_ptr<CanSignalModel> signal);
 
 private:
-    std::unique_ptr<std::map<int, double>> canSignals_;
+    std::unique_ptr<std::map<int, CanSignalModel>> canSignals_;
 };

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "EventSignal.hpp"
+#include "../EventSignal.hpp"
 #include <memory>
 
 class CanSignalModel
