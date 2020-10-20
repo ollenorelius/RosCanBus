@@ -3,6 +3,8 @@
 #include <map>
 #include <memory>
 
+#include "../CanDB/SignalDecoder.hpp" //cant forward declare, why...
+
 class Frame;
 class SignalDefinition;
 class FrameData;
@@ -30,4 +32,5 @@ private:
     CanSignalCollectionModel* signalCollectionModel_;
     std::map<int, Frame>* rxCanFramesCollectionModel_;
     std::map<int, SignalDefinition>* canSignalDefinitionCollectionModel_;
+    std::unique_ptr<SignalDecoder> signalDecoder_;
 };
