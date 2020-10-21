@@ -133,6 +133,7 @@ include_directories(
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
 add_executable(${PROJECT_NAME}_node src/main.cpp)
+add_executable(${PROJECT_NAME}_test test/test.cpp)
 
 set(SOURCES
 ${CMAKE_CURRENT_LIST_DIR}/src/CanGwModel.cpp
@@ -143,6 +144,7 @@ ${CMAKE_CURRENT_LIST_DIR}/src/CanDB/Frame.cpp
 ${CMAKE_CURRENT_LIST_DIR}/src/CanDB/SignalDefinition.cpp
 ${CMAKE_CURRENT_LIST_DIR}/src/CanDB/FrameReader.cpp
 ${CMAKE_CURRENT_LIST_DIR}/src/CanDB/SignalReader.cpp
+${CMAKE_CURRENT_LIST_DIR}/src/CanDB/SignalDecoder.cpp
 ${CMAKE_CURRENT_LIST_DIR}/src/Interfaces/CAN.cpp
 ${CMAKE_CURRENT_LIST_DIR}/src/Interfaces/RosPublisher.cpp
 ${CMAKE_CURRENT_LIST_DIR}/src/EventSignal.cpp
@@ -160,6 +162,10 @@ target_sources(${PROJECT_NAME}_node PRIVATE ${SOURCES}
                 ${CMAKE_CURRENT_LIST_DIR}/src/main.cpp
                 )
 
+target_sources(${PROJECT_NAME}_test PRIVATE ${SOURCES}
+                ${CMAKE_CURRENT_LIST_DIR}/test/test.cpp
+                )
+
 
 
 ## Rename C++ executable without prefix
@@ -171,12 +177,21 @@ target_sources(${PROJECT_NAME}_node PRIVATE ${SOURCES}
 target_include_directories( ${PROJECT_NAME}_node PUBLIC 
     lib/xlnt/include
 )
+
+target_include_directories( ${PROJECT_NAME}_test PUBLIC 
+    lib/xlnt/include
+)
 ## Add cmake target dependencies of the executable
 ## same as for the library above
 # add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
 target_link_libraries(${PROJECT_NAME}_node
+  ${catkin_LIBRARIES}
+  ${CMAKE_CURRENT_LIST_DIR}/lib/xlnt/build/source/libxlnt.so
+)
+
+target_link_libraries(${PROJECT_NAME}_test
   ${catkin_LIBRARIES}
   ${CMAKE_CURRENT_LIST_DIR}/lib/xlnt/build/source/libxlnt.so
 )
