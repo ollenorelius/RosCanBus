@@ -36,7 +36,18 @@ std::map<int, double> FrameToSignalsController::decodeCanFrame(FrameData frameDa
      * data before I can make sure it works generally.
      */
     std::map<int, double> signalValues;
+    
+    try
+    {
+        Frame frameDefinition = rxCanFramesCollectionModel_->at(frameData.id);
+    }
+    catch (std::out_of_range e)
+    {
+        return signalValues;
+    }
+    
     Frame frameDefinition = rxCanFramesCollectionModel_->at(frameData.id);
+
     std::vector<int>* signals = frameDefinition.getSignals();    
 
     long long int data = *(long long int*)(frameData.data);
