@@ -28,10 +28,11 @@ int main(int argc, char** argv)
     //canGwInterfaces.getCanInterface()->getRxCanEvent()->connect([&canGwInterfaces](){
     //    std::cout << canGwInterfaces.getCanInterface()->getLatestCanFrame().data[0] << std::endl;
     //});
-    ros::spin();
+//    ros::spin();
     while (1)
     {
         canGwInterfaces.getCanInterface()->readCanFrame();
+	ros::spinOnce();
     }
 
     return 0;
