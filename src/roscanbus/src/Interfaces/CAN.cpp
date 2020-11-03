@@ -24,7 +24,7 @@ void Interfaces::CAN::init()
 
     socketFd_ = socket(PF_CAN, SOCK_RAW, CAN_RAW);
 
-    std::strcpy(ifr.ifr_name, "vcan0" );
+    std::strcpy(ifr.ifr_name, "can0" );
     ioctl(socketFd_, SIOCGIFINDEX, &ifr);
 
     addr.can_family = AF_CAN;
