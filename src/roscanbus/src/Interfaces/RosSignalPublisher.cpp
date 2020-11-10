@@ -18,6 +18,7 @@ RosSignalPublisher::RosSignalPublisher(CanSignalModel* canSignalModel, RosNodeMo
     {
         publishRosMessage();
     };
+    canSignalModel_->getValueChanged()->connect(callback);
 }
 
 void RosSignalPublisher::publishRosMessage() 

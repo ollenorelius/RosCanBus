@@ -42,7 +42,7 @@ void Interfaces::CAN::readCanFrame()
 {
     struct can_frame frame;
 
-    int nbytes = read(socketFd_, &frame, sizeof(struct can_frame));
+    int nbytes = read(socketFd_, &frame, sizeof(struct can_frame));   
 
     if (nbytes < 0) {
             perror("can raw socket read");

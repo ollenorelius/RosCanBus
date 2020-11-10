@@ -26,13 +26,15 @@ int main(int argc, char** argv)
     CanGwController canGwController(canGwModel.get(), &canGwInterfaces);
 
     //canGwInterfaces.getCanInterface()->getRxCanEvent()->connect([&canGwInterfaces](){
-    //    std::cout << canGwInterfaces.getCanInterface()->getLatestCanFrame().data[0] << std::endl;
+        //std::cout << canGwInterfaces.getCanInterface()->getLatestCanFrame().data[0] << std::endl;
     //});
 //    ros::spin();
     while (1)
     {
         canGwInterfaces.getCanInterface()->readCanFrame();
-	ros::spinOnce();
+	    ros::spinOnce();
+        
+    
     }
 
     return 0;
