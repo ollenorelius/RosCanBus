@@ -1,3 +1,4 @@
+#pragma once
 
 #include "../EventSignal.hpp"
 #include <memory>
@@ -13,6 +14,7 @@ namespace Interfaces
 
         FrameData getLatestCanFrame() const;
         void readCanFrame();
+        static void writeCanFrame(const FrameData& fd);
         EventSignal* getRxCanEvent() const;
 
     private:

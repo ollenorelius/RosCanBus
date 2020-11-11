@@ -6,6 +6,8 @@
 #include <memory>
 #include "ros/ros.h"
 
+#include "Controllers/CanTransmitterController.hpp"
+#include "Models/CanPublishTimerModel.hpp"
 
 int main(int argc, char** argv)
 {
@@ -29,12 +31,28 @@ int main(int argc, char** argv)
         //std::cout << canGwInterfaces.getCanInterface()->getLatestCanFrame().data[0] << std::endl;
     //});
 //    ros::spin();
+
+    std::unique_ptr<CanPublishTimerModel> canPublishtimerModel = 
+        std::make_unique<CanPublishTimerModel> ();
+    std::unique_ptr<CanSignalList> canSignalList = std::make_unique<CanSignalList> (); 
+
+    FrameData fd;
+    fd.id = 16;
+    fd.dlc = 8;  
+    fd.data[0] = 0xFF;
+    
+    canSignalList->emplace_back(fd); //insert a random frame data to publish
+
+    std::unique_ptr<CanTransmitterController> canTransmitterController = 
+        std::make_unique<CanTransmitterController> (canSignalList.get(), canPublishtimerModel.get());
+
     while (1)
     {
-        canGwInterfaces.getCanInterface()->readCanFrame();
-	    ros::spinOnce();
-        
-    
+        //canGwInterfaces.getCanInterface()->readCanFrame();
+	    
+        canTransmitterController->updateAndPublish();
+        ros::spinOnce();
+           
     }
 
     return 0;
