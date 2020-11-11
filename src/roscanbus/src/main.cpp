@@ -37,14 +37,17 @@ int main(int argc, char** argv)
     std::unique_ptr<CanSignalList> canSignalList = std::make_unique<CanSignalList> (); 
 
     FrameData fd;
-    fd.id = 16;
+    fd.id = 5;
     fd.dlc = 8;  
     fd.data[0] = 0xFF;
     
     canSignalList->emplace_back(fd); //insert a random frame data to publish
 
     std::unique_ptr<CanTransmitterController> canTransmitterController = 
-        std::make_unique<CanTransmitterController> (canSignalList.get(), canPublishtimerModel.get());
+        std::make_unique<CanTransmitterController> (
+            canGwInterfaces.getCanInterface(),
+            canSignalList.get(), 
+            canPublishtimerModel.get());
 
     while (1)
     {

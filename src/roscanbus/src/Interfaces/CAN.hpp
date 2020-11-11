@@ -14,7 +14,7 @@ namespace Interfaces
 
         FrameData getLatestCanFrame() const;
         void readCanFrame();
-        static void writeCanFrame(const FrameData& fd);
+        void writeCanFrame(const FrameData& fd);
         EventSignal* getRxCanEvent() const;
 
     private:

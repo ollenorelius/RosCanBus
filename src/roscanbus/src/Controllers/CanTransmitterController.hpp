@@ -13,12 +13,14 @@ class CanTransmitterController
 {
     
 public:
-    CanTransmitterController( CanSignalList* canSignalList , 
+    CanTransmitterController( Interfaces::CAN* canInterface,
+                              CanSignalList* canSignalList, 
                               CanPublishTimerModel* canPublishTimerModel);
 
 void updateAndPublish();
 
 private:
+    Interfaces::CAN*        canInterface_;
     CanSignalList*          canSignalList_;
     CanPublishTimerModel*   canPublishTimerModel_;
 };

@@ -62,32 +62,27 @@ void Interfaces::CAN::readCanFrame()
 
 void Interfaces::CAN::writeCanFrame(const FrameData& fd)
 {
-    //int s = fd.data; //??
-    int s = 1337;
     struct sockaddr_can addr;
     struct ifreq ifr;
     socklen_t len = sizeof(addr);
     struct can_frame frame;
+        
+    frame.can_id = fd.id;
+    frame.can_dlc = fd.dlc;
 
-    int nbytes = recvfrom(s, &frame, sizeof(struct can_frame),
-                    0, (struct sockaddr*)&addr, &len);
-
-    /* get interface name of the received CAN frame */
-    ifr.ifr_ifindex = addr.can_ifindex;
-    ioctl(s, SIOCGIFNAME, &ifr);
-    printf("Received a CAN frame from interface %s", ifr.ifr_name);
-
+    //cpy message
+    for(int i=0;i<8;++i) frame.data[i] = fd.data[i];
+            
     strcpy(ifr.ifr_name, "can0");
-    ioctl(s, SIOCGIFINDEX, &ifr);
+    ioctl(socketFd_, SIOCGIFINDEX, &ifr);
     addr.can_ifindex = ifr.ifr_ifindex;
     addr.can_family  = AF_CAN;
 
-    nbytes = sendto(s, &frame, sizeof(struct can_frame),
-                0, (struct sockaddr*)&addr, sizeof(addr));
-
-    //timestamp on message sent
+    int nbytes = write(socketFd_, &frame, sizeof(struct can_frame));
+  
+    // //timestamp on message sent
     struct timeval tv;
-    ioctl(s, SIOCGSTAMP, &tv);
+    ioctl(socketFd_, SIOCGSTAMP, &tv);
 }
 
 EventSignal* Interfaces::CAN::getRxCanEvent() const

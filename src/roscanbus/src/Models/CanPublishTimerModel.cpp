@@ -8,8 +8,11 @@ CanPublishTimerModel::CanPublishTimerModel() :
 }
 
 void CanPublishTimerModel::setCurrentTime()
+{   
+    timeNow_ = std::chrono::system_clock::now();
+}
+
+double CanPublishTimerModel::compare(std::chrono::time_point<std::chrono::system_clock> & otherTime)
 {
-    auto t = std::chrono::system_clock::now();
-    //dt_ = std::chrono::duration<double> (t - timeNow_).count();
-    timeNow_ = t;
+    return std::chrono::duration<double> (otherTime - timeNow_).count();
 }

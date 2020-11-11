@@ -9,10 +9,12 @@ class CanPublishTimerModel
 {
 public:
     CanPublishTimerModel();
-    void setCurrentTime();    
 
-private:    
-    //std::chrono::milliseconds dt_;
+    void setCurrentTime();   
+    double compare(std::chrono::time_point<std::chrono::system_clock> & otherTime);
+
+private:   
+
     std::chrono::time_point<std::chrono::system_clock> timeNow_;
     std::unique_ptr<EventSignal> valueChanged_;
 };
