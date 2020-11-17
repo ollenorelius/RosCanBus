@@ -13,7 +13,7 @@
 Interfaces::CAN::CAN()
 {
     rxCanEvent_ = std::make_unique<EventSignal>();
-
+    interface_ = "can0";
     init();
 }
 
@@ -24,7 +24,7 @@ void Interfaces::CAN::init()
 
     socketFd_ = socket(PF_CAN, SOCK_RAW, CAN_RAW);
 
-    std::strcpy(ifr.ifr_name, "can0" );
+    std::strcpy(ifr.ifr_name, interface_.data());
     ioctl(socketFd_, SIOCGIFINDEX, &ifr);
 
     addr.can_family = AF_CAN;
@@ -71,9 +71,10 @@ void Interfaces::CAN::writeCanFrame(const FrameData& fd)
     frame.can_dlc = fd.dlc;
 
     //cpy message
-    for(int i=0;i<8;++i) frame.data[i] = fd.data[i];
+    memcpy(frame.data, fd.data, fd.dlc);
+    //for(int i=0;i<8;++i) frame.data[i] = fd.data[i];
             
-    strcpy(ifr.ifr_name, "can0");
+    strcpy(ifr.ifr_name, interface_.data());
     ioctl(socketFd_, SIOCGIFINDEX, &ifr);
     addr.can_ifindex = ifr.ifr_ifindex;
     addr.can_family  = AF_CAN;

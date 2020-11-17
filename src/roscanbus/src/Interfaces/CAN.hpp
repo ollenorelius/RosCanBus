@@ -24,5 +24,6 @@ namespace Interfaces
         std::unique_ptr<EventSignal> rxCanEvent_;
         int socketFd_;
         FrameData lastCanFrame_;
+        std::string interface_;
     };
 };
