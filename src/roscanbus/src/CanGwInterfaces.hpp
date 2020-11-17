@@ -18,4 +18,6 @@ public:
 private:
     std::unique_ptr<Interfaces::CAN> canInterface_;
     std::unique_ptr<Interfaces::RosPublisher> rosPublisher_;
+    std::unique_ptr<Interfaces::ImuPublisher> imuPublisher_;
+
 };

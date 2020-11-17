@@ -153,6 +153,7 @@ ${CMAKE_CURRENT_LIST_DIR}/src/Models/CommandLineModel.cpp
 ${CMAKE_CURRENT_LIST_DIR}/src/Models/CanSignalModel.cpp
 ${CMAKE_CURRENT_LIST_DIR}/src/Models/RosNodeModel.cpp
 ${CMAKE_CURRENT_LIST_DIR}/src/Interfaces/RosSignalPublisher.cpp
+${CMAKE_CURRENT_LIST_DIR}/src/Interfaces/ImuPublisher.cpp
 ${CMAKE_CURRENT_LIST_DIR}/src/Controllers/SignalPublishingController.cpp
 
 
