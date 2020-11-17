@@ -1,9 +1,12 @@
 #pragma once
 
 #include <map>
+#include "ros/ros.h"
 
 class CanSignalCollectionModel;
 class RosNodeModel;
+class CanSignalModel;
+
 
 enum class ImuData
 {
@@ -20,18 +23,16 @@ enum class ImuData
     MAG_Z
 };
 
-class ImuPublisher
+class ImuPublishController
 {
 public:
-    ImuPublisher(std::map<ImuData, CanSignalModel*> signals, 
-                 CanSignalCollectionModel* canSignalCollectionModel,
+    ImuPublishController(std::map<ImuData, CanSignalModel*> signals, 
                  RosNodeModel* rosNodeModel);
 
     void start();
 
 private:
     std::map<ImuData, CanSignalModel*> signals_;
-    CanSignalCollectionModel* canSignalCollectionModel_;
     RosNodeModel* rosNodeModel_;
     ros::Publisher signal_pub_;
 
