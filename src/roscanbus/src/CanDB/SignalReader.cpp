@@ -45,7 +45,7 @@ SignalDefinition SignalReader::createSignalDefinition(xlnt::cell_vector row)
     if (row[static_cast<int>(COLUMNS::SCALER)].to_string() == "-" || 
         row[static_cast<int>(COLUMNS::SCALER)].to_string() == "")
     {
-        scaler = 0;
+        scaler = 1;
     }
     else
     {

@@ -25,6 +25,15 @@ std::string Frame::getDescription()
     return description_;
 }
 
+int Frame::getDlc()
+{
+    return dlc_;
+}
+void Frame::setDlc(int dlc)
+{
+    dlc_ = dlc;
+}
+
 Frame::Frame(std::string name,
                int frameId,
                std::vector<int> signals,
@@ -34,7 +43,8 @@ Frame::Frame(std::string name,
     frameId_(frameId),
     signals_(signals),
     period_(period),
-    description_(description)
+    description_(description),
+    dlc_(0)
 {
     
 }
