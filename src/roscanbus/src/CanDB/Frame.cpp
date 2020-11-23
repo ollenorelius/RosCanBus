@@ -48,3 +48,8 @@ Frame::Frame(std::string name,
 {
     
 }
+
+Frame::Frame() 
+{
+    
+}

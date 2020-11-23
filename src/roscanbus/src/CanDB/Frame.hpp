@@ -12,7 +12,7 @@ public:
                double period,
                std::string description);
 
-    Frame(const Frame& other); 
+    Frame(); 
 
 
     std::string getName();

@@ -60,7 +60,7 @@ std::map<int, double> FrameToSignalsController::decodeCanFrame(FrameData frameDa
         dlc = dlc / 8 + (dlc % 8 != 0); // divide by 8 and round up.
         Frame frameToEdit = rxCanFramesCollectionModel_->at(frameData.id);
         frameToEdit.setDlc(dlc);
-        (*rxCanFramesCollectionModel_)[frameData.id] = frameToEdit;
+        rxCanFramesCollectionModel_->at(frameData.id) = frameToEdit;
     }
 
     if (frameData.dlc != frameDefinition.getDlc())
