@@ -22,7 +22,8 @@ public:
     EventSignal* getValueChanged();
     CanSignalDirection getCanSignalDirection();
 
-
+    long getTimeStamp() const;
+    void setTimeStamp(const long & timestamp);
 
 private:
     double value_;

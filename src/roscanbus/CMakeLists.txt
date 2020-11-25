@@ -151,6 +151,8 @@ ${CMAKE_CURRENT_LIST_DIR}/src/EventSignal.cpp
 ${CMAKE_CURRENT_LIST_DIR}/src/Controllers/FrameToSignalsController.cpp
 ${CMAKE_CURRENT_LIST_DIR}/src/Models/CommandLineModel.cpp
 ${CMAKE_CURRENT_LIST_DIR}/src/Models/CanSignalModel.cpp
+${CMAKE_CURRENT_LIST_DIR}/src/Models/CanFrameEmitTimerModel.cpp
+${CMAKE_CURRENT_LIST_DIR}/src/Models/DummyTickModel.cpp
 ${CMAKE_CURRENT_LIST_DIR}/src/Models/RosNodeModel.cpp
 ${CMAKE_CURRENT_LIST_DIR}/src/Models/CanPublishTimerModel.cpp
 ${CMAKE_CURRENT_LIST_DIR}/src/Interfaces/RosSignalPublisher.cpp

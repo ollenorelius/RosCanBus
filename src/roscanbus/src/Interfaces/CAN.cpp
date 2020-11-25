@@ -7,13 +7,14 @@
 #include <unistd.h>
 #include <iostream>
 
+#include "../EventSignal.hpp"
 
+Interfaces::CAN::CAN() : 
+    rxCanEvent_(std::make_unique<EventSignal>()), 
+    txCanEvent_(std::make_unique<EventSignal>()),
+    interface_("can0")
 
-
-Interfaces::CAN::CAN()
-{
-    rxCanEvent_ = std::make_unique<EventSignal>();
-    interface_ = "can0";
+{   
     init();
 }
 
@@ -62,9 +63,10 @@ void Interfaces::CAN::readCanFrame()
 
 void Interfaces::CAN::writeCanFrame(const FrameData& fd)
 {
-    struct sockaddr_can addr;
-    struct ifreq ifr;
-    socklen_t len = sizeof(addr);
+    // struct sockaddr_can addr;
+    // struct ifreq ifr;
+    // socklen_t len = sizeof(addr);
+
     struct can_frame frame;
         
     frame.can_id = fd.id;
@@ -72,23 +74,25 @@ void Interfaces::CAN::writeCanFrame(const FrameData& fd)
 
     //cpy message
     memcpy(frame.data, fd.data, fd.dlc);
-    //for(int i=0;i<8;++i) frame.data[i] = fd.data[i];
             
-    strcpy(ifr.ifr_name, interface_.data());
-    ioctl(socketFd_, SIOCGIFINDEX, &ifr);
-    addr.can_ifindex = ifr.ifr_ifindex;
-    addr.can_family  = AF_CAN;
+    // strcpy(ifr.ifr_name, interface_.data());
+    // ioctl(socketFd_, SIOCGIFINDEX, &ifr);
+
+    // addr.can_ifindex = ifr.ifr_ifindex;
+    // addr.can_family  = AF_CAN;
 
     int nbytes = write(socketFd_, &frame, sizeof(struct can_frame));
-  
-    // //timestamp on message sent
-    struct timeval tv;
-    ioctl(socketFd_, SIOCGSTAMP, &tv);
+    txCanEvent_->emit();    
 }
 
 EventSignal* Interfaces::CAN::getRxCanEvent() const
 {
     return rxCanEvent_.get();
+}
+
+EventSignal* Interfaces::CAN::getTxCanEvent() const
+{
+    return txCanEvent_.get();
 }
 
 FrameData Interfaces::CAN::getLatestCanFrame() const

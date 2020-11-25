@@ -1,20 +1,21 @@
 #include "SignalDefinition.hpp"
 
-
 SignalDefinition::SignalDefinition(SIGNAL_TYPE signalType,
                           int length,
                           double scaler,
                           double offset,
                           std::string unit,
                           std::string name,
-                          std::string description) :
+                          std::string description,
+                          std::string source) :
     signalType_(signalType),
     length_(length),
     scaler_(scaler),
     offset_(offset),
     unit_(unit),
     name_(name),
-    description_(description)
+    description_(description),
+    source_(source)
 {
 
 }
@@ -52,5 +53,10 @@ std::string SignalDefinition::getName()
 std::string SignalDefinition::getDescription() 
 {
     return description_;
+}
+
+std::string SignalDefinition::getSource()
+{
+    return source_;
 }
 

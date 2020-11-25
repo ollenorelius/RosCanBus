@@ -73,8 +73,7 @@ std::map<int, double> FrameToSignalsController::decodeCanFrame(FrameData frameDa
         signalDecoder_->get_signal(&canSignal, &output);
 
         if(signalDefinition.getSignalType() == SIGNAL_TYPE::SIGNED) 
-        {
-            //std::cout << "SIGNED VAL: " << signalDecoder_->two_complement(output, length) << std::endl;
+        {            
             signalValues.insert(std::pair<int, double> (signalId, signalDecoder_->two_complement(output, length)));
         }
         else signalValues.insert(std::pair<int, double> (signalId, output));

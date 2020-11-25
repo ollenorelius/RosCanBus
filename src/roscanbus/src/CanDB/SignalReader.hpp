@@ -9,7 +9,7 @@
 
 class SignalReader
 {
-    public:
+public:
     SignalReader(std::string path);
     
     std::unique_ptr<std::map<int, SignalDefinition>> getSignalDefinitions();

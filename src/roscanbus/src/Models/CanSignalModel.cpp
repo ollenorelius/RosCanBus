@@ -39,3 +39,13 @@ CanSignalDirection CanSignalModel::getCanSignalDirection()
 {
     return canSignalDirection_;
 }
+
+long CanSignalModel::getTimeStamp() const
+{
+    return timestamp_;
+}
+
+void CanSignalModel::setTimeStamp(const long & timestamp)
+{
+    timestamp_ = timestamp;
+}

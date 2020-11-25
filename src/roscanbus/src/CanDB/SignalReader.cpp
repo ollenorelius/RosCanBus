@@ -58,7 +58,8 @@ SignalDefinition SignalReader::createSignalDefinition(xlnt::cell_vector row)
                                       row[static_cast<int>(COLUMNS::OFFSET)].value<double>(),
                                       row[static_cast<int>(COLUMNS::UNIT)].value<std::string>(),
                                       row[static_cast<int>(COLUMNS::NAME)].value<std::string>(),
-                                      row[static_cast<int>(COLUMNS::DESCRIPTION)].value<std::string>()
+                                      row[static_cast<int>(COLUMNS::DESCRIPTION)].value<std::string>(),
+                                      row[static_cast<int>(COLUMNS::SOURCE)].value<std::string>()
                                       );
 }
 

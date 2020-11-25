@@ -1,26 +1,37 @@
 #pragma once
 
-#include <vector>
-#include <chrono>
+#include <map>
 
-#include "../Interfaces/CAN.hpp"
-#include "../Interfaces/FrameData.hpp"
-#include "../Models/CanPublishTimerModel.hpp"
+#include "../CanDB/Frame.hpp"
+#include "../Models/DummyTickModel.hpp"
+#include "../CanDB/SignalDefinition.hpp"
 
-typedef std::vector<FrameData> CanSignalList;
+class CanSignalCollectionModel;
+class CanPublishTimerModel;
+class CanFrameEmitTimerModel;
+
+namespace Interfaces
+{
+    class CAN;
+}
 
 class CanTransmitterController
 {
     
 public:
     CanTransmitterController( Interfaces::CAN* canInterface,
-                              CanSignalList* canSignalList, 
-                              CanPublishTimerModel* canPublishTimerModel);
+                              CanSignalCollectionModel* canSignalCollectionModel, 
+                              std::map<int, Frame>* txCanFramesCollectionModel,
+                              CanFrameEmitTimerModel*     canFrameEmitTimerModel,
+                              std::map<int, SignalDefinition>* canSignalDefinitionCollectionModel,
+                              DummyTickModel* dummyTickModel);
 
-void updateAndPublish();
+    void updateAndPublish();
 
-private:
-    Interfaces::CAN*        canInterface_;
-    CanSignalList*          canSignalList_;
-    CanPublishTimerModel*   canPublishTimerModel_;
+private:     
+    Interfaces::CAN*            canInterface_;
+    CanSignalCollectionModel*   canSignalCollectionModel_;
+    std::map<int, Frame>*       txCanFramesCollectionModel_;
+    CanFrameEmitTimerModel*     canFrameEmitTimerModel_; 
+    std::map<int, SignalDefinition>* canSignalDefinitionCollectionModel_;   
 };
