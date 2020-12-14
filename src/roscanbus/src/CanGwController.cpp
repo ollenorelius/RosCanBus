@@ -25,9 +25,4 @@ CanGwController::CanGwController(CanGwModel* canGwModel, CanGwInterfaces* canGwI
 
 
 
-                                                    // Interfaces::CAN* canInterface,
-                                                    // CanSignalCollectionModel* canSignalCollectionModel,                                                 
-                                                    // std::map<int, Frame>* txCanFramesCollectionModel,
-                                                    // CanFrameEmitTimerModel* canFrameEmitTimerModel,
-                                                    // std::map<int, SignalDefinition>* canSignalDefinitionCollectionModel,
-                                                    // DummyTickModel* dummyTickModel
+                            

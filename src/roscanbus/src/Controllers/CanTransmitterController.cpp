@@ -3,6 +3,7 @@
 #include <iostream>
 #include <chrono>
 #include <cassert>
+#include <math.h>       /* ceil */
 
 #include "../Interfaces/CAN.hpp"
 #include "../Interfaces/FrameData.hpp"
@@ -12,14 +13,14 @@
 
 CanTransmitterController::CanTransmitterController( Interfaces::CAN* canInterface,
                                                     CanSignalCollectionModel* canSignalCollectionModel,                                                 
-                                                    std::map<int, Frame>* txCanFramesCollectionModel,
-                                                    CanFrameEmitTimerModel* canFrameEmitTimerModel,
+                                                    std::map<int, Frame>* txCanFramesCollectionModel,  
+                                                    CanFrameEmitTimerModel*     canFrameEmitTimerModel,                                                 
                                                     std::map<int, SignalDefinition>* canSignalDefinitionCollectionModel,
                                                     DummyTickModel* dummyTickModel
                                                     ) : 
     canInterface_(canInterface),
     canSignalCollectionModel_(canSignalCollectionModel),
-    txCanFramesCollectionModel_(txCanFramesCollectionModel),
+    txCanFramesCollectionModel_(txCanFramesCollectionModel),    
     canFrameEmitTimerModel_(canFrameEmitTimerModel),
     canSignalDefinitionCollectionModel_(canSignalDefinitionCollectionModel)
 {
@@ -33,6 +34,7 @@ CanTransmitterController::CanTransmitterController( Interfaces::CAN* canInterfac
     dummyTickModel->getSignal()->connect(updateAndPublishCallback);
 }
 
+//split this up into better method names and filling value from signalValues
 void CanTransmitterController::updateAndPublish()
 { 
     std::vector<CanSignalModel*> txCanSignalVector = canSignalCollectionModel_->getTxSignals();
@@ -47,32 +49,54 @@ void CanTransmitterController::updateAndPublish()
     { 
         //are we ready to send this frameId?  
         int frameId = frame.first;
-
-        if(!canFrameEmitTimerModel_->isFrameReadyToSend(frameId)) continue;      
         
+        if(!canFrameEmitTimerModel_->isFrameReadyToSend(frameId)) continue;      
+                
         //collect the signal connected to it
         std::vector<int>* signalValueIds = frame.second.getSignals();
                 
         FrameData fd;
-        int step = 0;        
+        int step = 0;
+        fd.id = frameId; 
+        
         for(const auto & signalId : *signalValueIds) 
         {
-            std::cout << "sending frame id : " << frameId << " with signals " << signalId <<  std::endl;
+            //std::cout << "sending frame id : " << frameId << " with signals " << signalId <<  std::endl;                                  
+            
+            auto signal = canSignalCollectionModel_->getCanSignal(signalId);          
+            double signalValue = signal->getValue();
+           
 
-            auto s = canSignalCollectionModel_->getCanSignal(signalId);          
-   
             //put it in correct place in framedata                        
-            SignalDefinition signalDefinition = canSignalDefinitionCollectionModel_->at(signalId);
+            SignalDefinition signalDefinition = canSignalDefinitionCollectionModel_->at(signalId);    
+            
+            fd.dlc += ceil(signalDefinition.getLength() / 8);
 
             switch(signalDefinition.getSignalType())
             {
-                case SIGNAL_TYPE::UNSIGNED : fd.data[step++] = static_cast<uint64_t>(s->getValue());break;
-                case SIGNAL_TYPE::SIGNED :   fd.data[step++] = static_cast<int64_t>(s->getValue());break;
-                case SIGNAL_TYPE::FLOAT :    fd.data[step++] = static_cast<float>(s->getValue());break;
-                case SIGNAL_TYPE::BOOL :     fd.data[step++] = static_cast<bool>(s->getValue());break;
+                case SIGNAL_TYPE::UNSIGNED : 
+                {
+                    fd.data[step++] = static_cast<uint64_t>(signalValue);                   
+                    break;
+                }
+                case SIGNAL_TYPE::SIGNED : 
+                {
+                    fd.data[step++] = static_cast<int64_t>(signalValue);
+                    break;
+                }  
+                case SIGNAL_TYPE::FLOAT : 
+                {
+                    fd.data[step++] = static_cast<float>(signalValue);
+                    break;
+                }   
+                case SIGNAL_TYPE::BOOL :     
+                {
+                    fd.data[step++] = static_cast<bool>(signalValue);
+                    break;
+                }
             }
         }
-
+        
         //send to canbus
         canInterface_->writeCanFrame(fd);
 

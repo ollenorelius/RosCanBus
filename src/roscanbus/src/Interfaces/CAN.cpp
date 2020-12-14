@@ -9,10 +9,10 @@
 
 #include "../EventSignal.hpp"
 
-Interfaces::CAN::CAN() : 
+Interfaces::CAN::CAN(std::string interface ) : 
     rxCanEvent_(std::make_unique<EventSignal>()), 
     txCanEvent_(std::make_unique<EventSignal>()),
-    interface_("can0")
+    interface_(interface)
 
 {   
     init();
@@ -33,7 +33,6 @@ void Interfaces::CAN::init()
 
     bind(socketFd_, (struct sockaddr *)&addr, sizeof(addr));
 }
-
 
 void Interfaces::CAN::deinit() 
 {
@@ -63,23 +62,13 @@ void Interfaces::CAN::readCanFrame()
 
 void Interfaces::CAN::writeCanFrame(const FrameData& fd)
 {
-    // struct sockaddr_can addr;
-    // struct ifreq ifr;
-    // socklen_t len = sizeof(addr);
-
     struct can_frame frame;
         
     frame.can_id = fd.id;
-    frame.can_dlc = fd.dlc;
-
+    frame.can_dlc = fd.dlc;  
+    
     //cpy message
     memcpy(frame.data, fd.data, fd.dlc);
-            
-    // strcpy(ifr.ifr_name, interface_.data());
-    // ioctl(socketFd_, SIOCGIFINDEX, &ifr);
-
-    // addr.can_ifindex = ifr.ifr_ifindex;
-    // addr.can_family  = AF_CAN;
 
     int nbytes = write(socketFd_, &frame, sizeof(struct can_frame));
     txCanEvent_->emit();    
