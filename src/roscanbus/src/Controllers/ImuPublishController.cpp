@@ -22,7 +22,7 @@ void ImuPublishController::publish()
 {
     sensor_msgs::Imu imu_message;
 
-    imu_message.header.frame_id = "base_link";
+    imu_message.header.frame_id = "imu_link";
 
     imu_message.header.stamp = ros::Time::now();
 
