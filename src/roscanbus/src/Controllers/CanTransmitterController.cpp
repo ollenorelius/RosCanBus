@@ -4,12 +4,25 @@
 #include <chrono>
 #include <cassert>
 #include <math.h>       /* ceil */
+#include <stdio.h>
+#include <string.h>
 
 #include "../Interfaces/CAN.hpp"
 #include "../Interfaces/FrameData.hpp"
 #include "../Models/CanPublishTimerModel.hpp"
 #include "../Models/CanSignalCollectionModel.hpp"
 #include "../Models/CanFrameEmitTimerModel.hpp"
+#include "../CanDB/SignalDecoder.hpp"
+
+struct unionCanData
+{
+    union 
+    {
+        char candata[8];
+        uint64_t intcandata;
+    };
+
+};
 
 CanTransmitterController::CanTransmitterController( Interfaces::CAN* canInterface,
                                                     CanSignalCollectionModel* canSignalCollectionModel,                                                 
@@ -36,7 +49,7 @@ CanTransmitterController::CanTransmitterController( Interfaces::CAN* canInterfac
 
 //split this up into better method names and filling value from signalValues
 void CanTransmitterController::updateAndPublish()
-{ 
+{     
     std::vector<CanSignalModel*> txCanSignalVector = canSignalCollectionModel_->getTxSignals();
     
     //nothing to send?
@@ -58,46 +71,57 @@ void CanTransmitterController::updateAndPublish()
         FrameData fd;
         int step = 0;
         fd.id = frameId; 
+        fd.dlc = 0;
         
+        uint64_t data_64 = 0;
+        std::vector<int> slengths;
+        unionCanData ucd;
+
+
         for(const auto & signalId : *signalValueIds) 
         {
-            //std::cout << "sending frame id : " << frameId << " with signals " << signalId <<  std::endl;                                  
+            std::cout << "sending frame id : " << frameId << " with signals " << signalId <<  std::endl;                                  
             
             auto signal = canSignalCollectionModel_->getCanSignal(signalId);          
             double signalValue = signal->getValue();
            
-
             //put it in correct place in framedata                        
             SignalDefinition signalDefinition = canSignalDefinitionCollectionModel_->at(signalId);    
             
-            fd.dlc += ceil(signalDefinition.getLength() / 8);
+            fd.dlc += signalDefinition.getLength();
+            
+            int signalLength = signalDefinition.getLength();
+            slengths.emplace_back(signalLength);
+            uint64_t sv_64 = static_cast<uint64_t>(signalValue);
 
-            switch(signalDefinition.getSignalType())
-            {
-                case SIGNAL_TYPE::UNSIGNED : 
-                {
-                    fd.data[step++] = static_cast<uint64_t>(signalValue);                   
-                    break;
-                }
-                case SIGNAL_TYPE::SIGNED : 
-                {
-                    fd.data[step++] = static_cast<int64_t>(signalValue);
-                    break;
-                }  
-                case SIGNAL_TYPE::FLOAT : 
-                {
-                    fd.data[step++] = static_cast<float>(signalValue);
-                    break;
-                }   
-                case SIGNAL_TYPE::BOOL :     
-                {
-                    fd.data[step++] = static_cast<bool>(signalValue);
-                    break;
-                }
-            }
+            data_64 |= SignalDecoder::two_complement(sv_64, signalLength) << step;
+            step += signalLength;
+            //std::cout << sv_64 << " in pos " << step << std::endl;
+
         }
-        
         //send to canbus
+        fd.dlc = ceil(fd.dlc/8.0);
+
+        int step0 = 0;
+   
+        //*fd.data = data_64;
+        //*fd.data = 0x000A000B;
+        
+               
+        
+        ucd.intcandata = data_64;
+        memcpy(fd.data, ucd.candata, fd.dlc);
+        
+        
+
+
+        // for(int i = 0; i < 8; ++i)
+        // {
+        //     std::cout << (int)fd.data[i] << std::endl;
+        // }
+
+        // *fd.data = data_64;
+     
         canInterface_->writeCanFrame(fd);
 
         //update frame timer model
