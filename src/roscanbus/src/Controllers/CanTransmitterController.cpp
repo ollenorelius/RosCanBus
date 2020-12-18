@@ -14,6 +14,8 @@
 #include "../Models/CanFrameEmitTimerModel.hpp"
 #include "../CanDB/SignalDecoder.hpp"
 
+
+//signal values are shifted into a uint64_t and memcpied over to a char[8] to be transmitted on the canbus
 struct unionCanData
 {
     union 
@@ -36,19 +38,16 @@ CanTransmitterController::CanTransmitterController( Interfaces::CAN* canInterfac
     txCanFramesCollectionModel_(txCanFramesCollectionModel),    
     canFrameEmitTimerModel_(canFrameEmitTimerModel),
     canSignalDefinitionCollectionModel_(canSignalDefinitionCollectionModel)
-{
-    //assert(txCanFramesCollectionModel_.find(subSignalId_) != txCanFramesCollectionModel_.end() && "not a valid transmission frame");   
-
-    auto updateAndPublishCallback = [this] ()
+{   
+    auto updateCallback = [this] ()
     {
-        this->updateAndPublish();
+        this->send();
     }; 
     
-    dummyTickModel->getSignal()->connect(updateAndPublishCallback);
+    dummyTickModel->getSignal()->connect(updateCallback);
 }
 
-//split this up into better method names and filling value from signalValues
-void CanTransmitterController::updateAndPublish()
+void CanTransmitterController::send()
 {     
     std::vector<CanSignalModel*> txCanSignalVector = canSignalCollectionModel_->getTxSignals();
     
@@ -73,15 +72,11 @@ void CanTransmitterController::updateAndPublish()
         fd.id = frameId; 
         fd.dlc = 0;
         
-        uint64_t data_64 = 0;
-        std::vector<int> slengths;
+        uint64_t data_64 = 0;        
         unionCanData ucd;
 
-
         for(const auto & signalId : *signalValueIds) 
-        {
-            std::cout << "sending frame id : " << frameId << " with signals " << signalId <<  std::endl;                                  
-            
+        {   
             auto signal = canSignalCollectionModel_->getCanSignal(signalId);          
             double signalValue = signal->getValue();
            
@@ -91,36 +86,15 @@ void CanTransmitterController::updateAndPublish()
             fd.dlc += signalDefinition.getLength();
             
             int signalLength = signalDefinition.getLength();
-            slengths.emplace_back(signalLength);
+          
             uint64_t sv_64 = static_cast<uint64_t>(signalValue);
-
             data_64 |= SignalDecoder::two_complement(sv_64, signalLength) << step;
             step += signalLength;
-            //std::cout << sv_64 << " in pos " << step << std::endl;
-
         }
-        //send to canbus
+        //set datalength of full message in bytes, transfer data to framedata.data, send to canbus
         fd.dlc = ceil(fd.dlc/8.0);
-
-        int step0 = 0;
-   
-        //*fd.data = data_64;
-        //*fd.data = 0x000A000B;
-        
-               
-        
         ucd.intcandata = data_64;
         memcpy(fd.data, ucd.candata, fd.dlc);
-        
-        
-
-
-        // for(int i = 0; i < 8; ++i)
-        // {
-        //     std::cout << (int)fd.data[i] << std::endl;
-        // }
-
-        // *fd.data = data_64;
      
         canInterface_->writeCanFrame(fd);
 

@@ -26,7 +26,7 @@ public:
                               std::map<int, SignalDefinition>* canSignalDefinitionCollectionModel,
                               DummyTickModel* dummyTickModel);
 
-    void updateAndPublish();
+    void send();
 
 private:     
     Interfaces::CAN*            canInterface_;
