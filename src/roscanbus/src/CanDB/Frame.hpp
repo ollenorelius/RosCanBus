@@ -12,10 +12,14 @@ public:
                double period,
                std::string description);
 
+    Frame(); 
+
 
     std::string getName();
     int getFrameId();
     double getPeriod();
+    int getDlc();
+    void setDlc(int dlc);
     std::vector<int>* getSignals();
     std::string getDescription();
 //    void decodeCanFrame(can_frame* canFrame);
@@ -27,6 +31,7 @@ private:
     double period_;
     std::vector<int> signals_;
     std::string description_;
+    int dlc_;
 
 
 

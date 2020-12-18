@@ -45,8 +45,30 @@ std::map<int, double> FrameToSignalsController::decodeCanFrame(FrameData frameDa
     {
         return signalValues;
     }
-    
+
     Frame frameDefinition = rxCanFramesCollectionModel_->at(frameData.id);
+
+    if (frameDefinition.getDlc() == 0)
+    {
+        int dlc = 0;   
+        auto signals = frameDefinition.getSignals();
+        
+        for (int signalIndex : *signals)
+        {
+            dlc += canSignalDefinitionCollectionModel_->at(signalIndex).getLength();
+        }
+        dlc = dlc / 8 + (dlc % 8 != 0); // divide by 8 and round up.
+        Frame frameToEdit = rxCanFramesCollectionModel_->at(frameData.id);
+        frameToEdit.setDlc(dlc);
+        rxCanFramesCollectionModel_->at(frameData.id) = frameToEdit;
+    }
+
+    if (frameData.dlc != frameDefinition.getDlc())
+    {
+        std::cout << "Bad DLC received! " << frameData.dlc << " != " << frameDefinition.getDlc() << "\n";
+        return signalValues;
+    }
+    
 
     std::vector<int>* signals = frameDefinition.getSignals();    
 
@@ -76,7 +98,7 @@ std::map<int, double> FrameToSignalsController::decodeCanFrame(FrameData frameDa
         {            
             signalValues.insert(std::pair<int, double> (signalId, signalDecoder_->two_complement(output, length)));
         }
-        else signalValues.insert(std::pair<int, double> (signalId, output));
+        else signalValues.insert(std::pair<int, double> (signalId, signalDefinition.getScaler() * output));
     }
 
     return signalValues;

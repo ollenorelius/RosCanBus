@@ -13,11 +13,8 @@ CanSignalModel::CanSignalModel(int index, double value, CanSignalDirection direc
 
 void CanSignalModel::setValue(double value) 
 {
-    if (value != value_)
-    {
-        value_ = value;
-        valueChanged_->emit();
-    }
+    value_ = value;
+    valueChanged_->emit();
 }
 
 double CanSignalModel::getValue() 

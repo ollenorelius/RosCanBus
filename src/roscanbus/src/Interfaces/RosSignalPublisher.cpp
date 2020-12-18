@@ -5,7 +5,9 @@
 #include <string>
 #include <algorithm>
 
-RosSignalPublisher::RosSignalPublisher(CanSignalModel* canSignalModel, RosNodeModel* rosNodeModel, std::map<int, SignalDefinition>* canSignalDefinitions):
+RosSignalPublisher::RosSignalPublisher(CanSignalModel* canSignalModel,
+                                       RosNodeModel* rosNodeModel,
+                                       std::map<int, SignalDefinition>* canSignalDefinitions):
     canSignalModel_(canSignalModel),
     rosNodeModel_(rosNodeModel)
 {
