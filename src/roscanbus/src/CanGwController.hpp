@@ -4,6 +4,8 @@
 #include "Controllers/SignalPublishingController.hpp"
 #include "Controllers/CanTransmitterController.hpp"
 
+#include "Controllers/ImuPublishController.hpp"
+#include <memory>
 class CanGwModel;
 class CanGwInterfaces;
 
@@ -16,4 +18,6 @@ private:
     std::unique_ptr<FrameToSignalsController> frameToSignalsController_;
     std::unique_ptr<SignalPublishingController> signalPublishingController_;
     std::unique_ptr<CanTransmitterController> canTransmitterController_;
+    std::unique_ptr<ImuPublishController> imuPublishController_;
+
 };
