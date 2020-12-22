@@ -33,7 +33,7 @@ void ImuPublishController::publish()
     imu_message.orientation_covariance[0] = -1;
 
 
-    const float gyro_scaler = 1000*3.1415/180.0;
+    const double gyro_scaler = 250*3.1415/180.0;
     imu_message.angular_velocity.x = signals_[ImuData::GYRO_X]->getValue()/32768.0*gyro_scaler;
     imu_message.angular_velocity.y = signals_[ImuData::GYRO_Y]->getValue()/32768.0*gyro_scaler;
     imu_message.angular_velocity.z = signals_[ImuData::GYRO_Z]->getValue()/32768.0*gyro_scaler;
