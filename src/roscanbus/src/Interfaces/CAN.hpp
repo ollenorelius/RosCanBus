@@ -10,7 +10,7 @@ namespace Interfaces
     class CAN
     {
     public:
-        CAN();
+        CAN(std::string interface = "can0");
         ~CAN();
 
         FrameData getLatestCanFrame() const;

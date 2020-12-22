@@ -14,6 +14,7 @@ CanGwController::CanGwController(CanGwModel* canGwModel, CanGwInterfaces* canGwI
                                                                            canGwModel->getRxCanFramesCollectionModel(),
                                                                            canGwModel->getCanSignalDefinitionCollectionModel());
 <<<<<<< HEAD
+<<<<<<< HEAD
                                                                            
     
     
@@ -24,6 +25,8 @@ CanGwController::CanGwController(CanGwModel* canGwModel, CanGwInterfaces* canGwI
                                                                             canGwModel->getCanSignalDefinitionCollectionModel(),
                                                                             canGwModel->getDummyTickModel());                                                                        
 =======
+=======
+>>>>>>> a89900bf798d814511c65caa685d1613c3c8bf6b
 
 
     std::map<ImuData, CanSignalModel*> imuSignals;
@@ -38,14 +41,21 @@ CanGwController::CanGwController(CanGwModel* canGwModel, CanGwInterfaces* canGwI
 
     imuPublishController_ = std::make_unique<ImuPublishController>(imuSignals, canGwModel->getRosNodeModel());
     
+<<<<<<< HEAD
 >>>>>>> datatypes
+=======
+                                                                           
+    
+    
+    canTransmitterController_ = std::make_unique<CanTransmitterController>( canGwInterfaces->getCanInterface(),
+                                                                            canGwModel->getCanSignalCollectionModel(),                                                                            
+                                                                            canGwModel->getTxCanFramesCollectionModel(),
+                                                                            canGwModel->getCanFrameEmitTimerModel(),
+                                                                            canGwModel->getCanSignalDefinitionCollectionModel(),
+                                                                            canGwModel->getDummyTickModel());                                                                        
+>>>>>>> a89900bf798d814511c65caa685d1613c3c8bf6b
 }
 
 
 
-                                                    // Interfaces::CAN* canInterface,
-                                                    // CanSignalCollectionModel* canSignalCollectionModel,                                                 
-                                                    // std::map<int, Frame>* txCanFramesCollectionModel,
-                                                    // CanFrameEmitTimerModel* canFrameEmitTimerModel,
-                                                    // std::map<int, SignalDefinition>* canSignalDefinitionCollectionModel,
-                                                    // DummyTickModel* dummyTickModel
+                            

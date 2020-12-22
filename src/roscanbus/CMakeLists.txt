@@ -134,6 +134,7 @@ include_directories(
 ## The recommended prefix ensures that target names across packages don't collide
 add_executable(${PROJECT_NAME}_node src/main.cpp)
 add_executable(${PROJECT_NAME}_test test/test.cpp)
+add_executable(${PROJECT_NAME}_test_tx test/test_tx.cpp)
 
 set(SOURCES
 ${CMAKE_CURRENT_LIST_DIR}/src/CanGwModel.cpp
@@ -170,6 +171,10 @@ target_sources(${PROJECT_NAME}_test PRIVATE ${SOURCES}
                 ${CMAKE_CURRENT_LIST_DIR}/test/test.cpp
                 )
 
+target_sources(${PROJECT_NAME}_test_tx PRIVATE ${SOURCES}
+                ${CMAKE_CURRENT_LIST_DIR}/test/test_tx.cpp
+                )
+
 
 
 ## Rename C++ executable without prefix
@@ -185,6 +190,10 @@ target_include_directories( ${PROJECT_NAME}_node PUBLIC
 target_include_directories( ${PROJECT_NAME}_test PUBLIC 
     lib/xlnt/include
 )
+
+target_include_directories( ${PROJECT_NAME}_test_tx PUBLIC 
+    lib/xlnt/include
+)
 ## Add cmake target dependencies of the executable
 ## same as for the library above
 # add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
@@ -196,6 +205,11 @@ target_link_libraries(${PROJECT_NAME}_node
 )
 
 target_link_libraries(${PROJECT_NAME}_test
+  ${catkin_LIBRARIES}
+  ${CMAKE_CURRENT_LIST_DIR}/lib/xlnt/build/source/libxlnt.so
+)
+
+target_link_libraries(${PROJECT_NAME}_test_tx
   ${catkin_LIBRARIES}
   ${CMAKE_CURRENT_LIST_DIR}/lib/xlnt/build/source/libxlnt.so
 )

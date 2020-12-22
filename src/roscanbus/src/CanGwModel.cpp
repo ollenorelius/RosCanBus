@@ -11,7 +11,7 @@ CanGwModel::CanGwModel(int argc, char** argv) :
     txCanFramesCollectionModel_ = std::move(FrameReader.getTxFrames("ADAS"));
     rxCanFramesCollectionModel_ = std::move(FrameReader.getRxFrames("ADAS"));
     
-    canFrameEmitTimerModel_ = std::make_unique<CanFrameEmitTimerModel> (this->getRxCanFramesCollectionModel());
+    canFrameEmitTimerModel_ = std::make_unique<CanFrameEmitTimerModel> (this->getTxCanFramesCollectionModel());
 
     SignalReader signalReader("signaldb.xlsx");
     canSignalDefinitionCollectionModel_ = std::move(signalReader.getSignalDefinitions());
