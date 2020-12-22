@@ -13,8 +13,6 @@ CanGwController::CanGwController(CanGwModel* canGwModel, CanGwInterfaces* canGwI
                                                                            canGwModel->getCanSignalCollectionModel(),
                                                                            canGwModel->getRxCanFramesCollectionModel(),
                                                                            canGwModel->getCanSignalDefinitionCollectionModel());
-<<<<<<< HEAD
-<<<<<<< HEAD
                                                                            
     
     
@@ -24,11 +22,6 @@ CanGwController::CanGwController(CanGwModel* canGwModel, CanGwInterfaces* canGwI
                                                                             canGwModel->getCanFrameEmitTimerModel(),
                                                                             canGwModel->getCanSignalDefinitionCollectionModel(),
                                                                             canGwModel->getDummyTickModel());                                                                        
-=======
-=======
->>>>>>> a89900bf798d814511c65caa685d1613c3c8bf6b
-
-
     std::map<ImuData, CanSignalModel*> imuSignals;
 
     imuSignals[ImuData::ACC_X] = canGwModel->getCanSignalCollectionModel()->getCanSignal(62);
@@ -41,10 +34,7 @@ CanGwController::CanGwController(CanGwModel* canGwModel, CanGwInterfaces* canGwI
 
     imuPublishController_ = std::make_unique<ImuPublishController>(imuSignals, canGwModel->getRosNodeModel());
     
-<<<<<<< HEAD
->>>>>>> datatypes
-=======
-                                                                           
+                                                       
     
     
     canTransmitterController_ = std::make_unique<CanTransmitterController>( canGwInterfaces->getCanInterface(),
@@ -53,7 +43,6 @@ CanGwController::CanGwController(CanGwModel* canGwModel, CanGwInterfaces* canGwI
                                                                             canGwModel->getCanFrameEmitTimerModel(),
                                                                             canGwModel->getCanSignalDefinitionCollectionModel(),
                                                                             canGwModel->getDummyTickModel());                                                                        
->>>>>>> a89900bf798d814511c65caa685d1613c3c8bf6b
 }
 
 

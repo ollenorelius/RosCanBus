@@ -11,7 +11,6 @@
 
 Interfaces::CAN::CAN(std::string interface ) : 
     rxCanEvent_(std::make_unique<EventSignal>()), 
-    txCanEvent_(std::make_unique<EventSignal>()),
     interface_(interface)
 
 {   
@@ -71,7 +70,6 @@ void Interfaces::CAN::writeCanFrame(const FrameData& fd)
     memcpy(frame.data, fd.data, fd.dlc);
 
     int nbytes = write(socketFd_, &frame, sizeof(struct can_frame));
-    txCanEvent_->emit();    
 }
 
 EventSignal* Interfaces::CAN::getRxCanEvent() const
@@ -79,10 +77,6 @@ EventSignal* Interfaces::CAN::getRxCanEvent() const
     return rxCanEvent_.get();
 }
 
-EventSignal* Interfaces::CAN::getTxCanEvent() const
-{
-    return txCanEvent_.get();
-}
 
 FrameData Interfaces::CAN::getLatestCanFrame() const
 {

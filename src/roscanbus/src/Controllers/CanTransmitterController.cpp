@@ -49,13 +49,6 @@ CanTransmitterController::CanTransmitterController( Interfaces::CAN* canInterfac
 
 void CanTransmitterController::send()
 {     
-    std::vector<CanSignalModel*> txCanSignalVector = canSignalCollectionModel_->getTxSignals();
-    
-    //nothing to send?
-    if(txCanSignalVector.empty()) return;
-
-    auto signal = txCanSignalVector.at(0);
-    auto signalId = signal->getIndex();    
     
     for(auto & frame : *txCanFramesCollectionModel_) 
     { 
@@ -103,3 +96,4 @@ void CanTransmitterController::send()
     }  
     
 }
+
