@@ -5,6 +5,8 @@
 #include "CanGwController.hpp"
 #include <memory>
 #include "ros/ros.h"
+#include <unistd.h>
+#include <thread>
 
 #include "Controllers/CanTransmitterController.hpp"
 #include "Models/CanPublishTimerModel.hpp"
@@ -40,14 +42,16 @@ int main(int argc, char** argv)
     // fd.data[0] = 0xFF;
     
     // canSignalList->emplace_back(fd); //insert a random frame data to publish
-
+    std::thread rxThread ([&canGwInterfaces](){while(1) canGwInterfaces.getCanInterface()->readCanFrame();});
     while (1)
     {
         //canGwInterfaces.getCanInterface()->readCanFrame();
         ros::spinOnce();
         //canTransmitterController->updateAndPublish();
-        canGwModel->getDummyTickModel()->emit();
+        //canGwModel->getDummyTickModel()->emit();
+        usleep(1'000);
     }
 
     return 0;
 }
+

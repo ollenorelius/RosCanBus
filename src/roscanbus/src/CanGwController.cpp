@@ -34,15 +34,10 @@ CanGwController::CanGwController(CanGwModel* canGwModel, CanGwInterfaces* canGwI
 
     imuPublishController_ = std::make_unique<ImuPublishController>(imuSignals, canGwModel->getRosNodeModel());
     
+    rosSubscriberController_ = std::make_unique<RosSubscriberController>(canGwModel->getCanSignalCollectionModel(),
+                                                                         canGwModel->getRosNodeModel(),
+                                                                         canGwModel->getCanSignalDefinitionCollectionModel());
                                                        
-    
-    
-    canTransmitterController_ = std::make_unique<CanTransmitterController>( canGwInterfaces->getCanInterface(),
-                                                                            canGwModel->getCanSignalCollectionModel(),                                                                            
-                                                                            canGwModel->getTxCanFramesCollectionModel(),
-                                                                            canGwModel->getCanFrameEmitTimerModel(),
-                                                                            canGwModel->getCanSignalDefinitionCollectionModel(),
-                                                                            canGwModel->getDummyTickModel());                                                                        
 }
 
 

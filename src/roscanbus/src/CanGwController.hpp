@@ -5,6 +5,7 @@
 #include "Controllers/ImuPublishController.hpp"
 #include <memory>
 #include "Controllers/CanTransmitterController.hpp"
+#include "Controllers/RosSubscriberController.hpp"
 
 class CanGwModel;
 class CanGwInterfaces;
@@ -20,4 +21,6 @@ private:
     std::unique_ptr<ImuPublishController> imuPublishController_;
 
     std::unique_ptr<CanTransmitterController> canTransmitterController_;
+
+    std::unique_ptr<RosSubscriberController> rosSubscriberController_;
 };

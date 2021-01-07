@@ -157,9 +157,11 @@ ${CMAKE_CURRENT_LIST_DIR}/src/Models/DummyTickModel.cpp
 ${CMAKE_CURRENT_LIST_DIR}/src/Models/RosNodeModel.cpp
 ${CMAKE_CURRENT_LIST_DIR}/src/Models/CanPublishTimerModel.cpp
 ${CMAKE_CURRENT_LIST_DIR}/src/Interfaces/RosSignalPublisher.cpp
+${CMAKE_CURRENT_LIST_DIR}/src/Interfaces/RosSignalSubscriber.cpp
 ${CMAKE_CURRENT_LIST_DIR}/src/Controllers/ImuPublishController.cpp
 ${CMAKE_CURRENT_LIST_DIR}/src/Controllers/SignalPublishingController.cpp
 ${CMAKE_CURRENT_LIST_DIR}/src/Controllers/CanTransmitterController.cpp
+${CMAKE_CURRENT_LIST_DIR}/src/Controllers/RosSubscriberController.cpp
 
 )
 

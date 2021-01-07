@@ -13,7 +13,8 @@ std::unique_ptr<std::map<int, Frame>> FrameReader::getRxFrames(std::string selfI
         if (sheetname.find("Frames",0) == -1) continue;
 
         xlnt::worksheet worksheet = document_.sheet_by_title(sheetname);
-        for (xlnt::range_iterator::reference row : worksheet.rows())
+        auto rows = worksheet.rows();
+        for (xlnt::range_iterator::reference row : rows)
         {
             if (row[SOURCE].value<std::string>() != selfID)
             {
@@ -41,7 +42,8 @@ std::unique_ptr<std::map<int, Frame>> FrameReader::getTxFrames(std::string selfI
         if (sheetname.find("Frames",0) == -1) continue;
 
         xlnt::worksheet worksheet = document_.sheet_by_title(sheetname);
-        for (xlnt::range_iterator::reference row : worksheet.rows())
+        auto rows = worksheet.rows();
+        for (xlnt::range_iterator::reference row : rows)
         {
             if (row[SOURCE].value<std::string>() == selfID)
             {
