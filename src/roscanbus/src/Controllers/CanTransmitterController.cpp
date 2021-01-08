@@ -52,9 +52,15 @@ void CanTransmitterController::send()
     
     for(auto & frame : *txCanFramesCollectionModel_) 
     { 
+
         //are we ready to send this frameId?  
         int frameId = frame.first;
         
+        // DEBUG REMOVE ME
+        //if (frameId != 18) continue;
+        // DEBUG REMOVE ME
+
+
         if(!canFrameEmitTimerModel_->isFrameReadyToSend(frameId)) continue;      
                 
         //collect the signal connected to it

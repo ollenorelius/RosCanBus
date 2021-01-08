@@ -48,7 +48,7 @@ int main(int argc, char** argv)
         //canGwInterfaces.getCanInterface()->readCanFrame();
         ros::spinOnce();
         //canTransmitterController->updateAndPublish();
-        //canGwModel->getDummyTickModel()->emit();
+        canGwModel->getDummyTickModel()->emit();
         usleep(1'000);
     }
 

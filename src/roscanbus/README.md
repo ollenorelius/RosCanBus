@@ -20,4 +20,5 @@ Then you can build the actual source. Go to the project root and run:
 - cmake ..
 - make -j4
 
-
+ISSUES:
+If signal IDs are not formatted as strings, they will not be read. This is a problem for single signal frames like blinker request.
