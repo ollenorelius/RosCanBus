@@ -164,16 +164,21 @@ ${CMAKE_CURRENT_LIST_DIR}/src/Controllers/CanTransmitterController.cpp
 ${CMAKE_CURRENT_LIST_DIR}/src/Controllers/RosSubscriberController.cpp
 
 )
+add_library(roscanlib ${SOURCES})
 
-target_sources(${PROJECT_NAME}_node PRIVATE ${SOURCES}
+target_link_libraries(${PROJECT_NAME}_node roscanlib)
+target_link_libraries(${PROJECT_NAME}_test roscanlib)
+target_link_libraries(${PROJECT_NAME}_test_tx roscanlib)
+
+target_sources(${PROJECT_NAME}_node PRIVATE
                 ${CMAKE_CURRENT_LIST_DIR}/src/main.cpp
                 )
 
-target_sources(${PROJECT_NAME}_test PRIVATE ${SOURCES}
+target_sources(${PROJECT_NAME}_test PRIVATE
                 ${CMAKE_CURRENT_LIST_DIR}/test/test.cpp
                 )
 
-target_sources(${PROJECT_NAME}_test_tx PRIVATE ${SOURCES}
+target_sources(${PROJECT_NAME}_test_tx PRIVATE
                 ${CMAKE_CURRENT_LIST_DIR}/test/test_tx.cpp
                 )
 
@@ -186,6 +191,10 @@ target_sources(${PROJECT_NAME}_test_tx PRIVATE ${SOURCES}
 # set_target_properties(${PROJECT_NAME}_node PROPERTIES OUTPUT_NAME node PREFIX "")
 
 target_include_directories( ${PROJECT_NAME}_node PUBLIC 
+    lib/xlnt/include
+)
+
+target_include_directories( roscanlib PUBLIC 
     lib/xlnt/include
 )
 
