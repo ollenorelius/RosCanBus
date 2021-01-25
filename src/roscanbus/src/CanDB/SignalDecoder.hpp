@@ -23,7 +23,10 @@ public:
     uint8_t rtr;		/* Remote Transmission Request */
     uint8_t ide;		/* Identifier Exstension */
     uint32_t id;		/* CAN id */
-    uint8_t data[8];	/* CAN data */
+    union abc{
+        uint8_t data[8];	/* CAN data */
+        uint64_t data_single;
+    }
 };
 
 

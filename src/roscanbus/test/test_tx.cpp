@@ -55,6 +55,17 @@ void test_on_framex(const int & frameId, std::map<int,Frame>* frameCollections, 
     std::cout << std::endl;
 }
 
+bool test_signal_decoder_on_single_signal()
+{
+    SignalDecoder::signal s;
+    s.byte_order = SignalDecoder::byte_order::INTEL;
+    s.len = 8;
+    s.start_bit = 0;
+    SignalDecoder signalDecoder;
+    signalDecoder.set_signal(s, 0x55);
+    return signalDecoder.data == nullptr;
+}
+
 int main()
 {
     std::cout << "init test env \n";
