@@ -55,19 +55,158 @@ void test_on_framex(const int & frameId, std::map<int,Frame>* frameCollections, 
     std::cout << std::endl;
 }
 
-bool test_signal_decoder_on_single_signal()
+
+#define BEGIN_TEST(TestSuite, TestName)                                    \
+   bool test__##TestSuite##__##TestName(void)                              \
+{                                                                          \
+      bool isTrue{true};
+
+#define END_TEST                                                           \
+   return isTrue;                                                          \
+}
+
+#define EXPECT_EQ(arg1, arg2) isTrue &= (arg1 == arg2); 
+
+#define RUN_TEST(TestSuite, TestName)                                      \
+{                                                                          \
+   bool ret = test__##TestSuite##__##TestName();                           \
+   std::cout << std::left << std::setfill('-')                             \
+   << std::setw(50) << #TestSuite " --> " #TestName " ";                   \
+                                                                           \
+   if(ret)                                                                 \
+   {                                                                       \
+      std::cout << std::setw(10)                                           \
+      << std::left << "\x1b[38;5;40m   OK \x1b[0m" /* colored in Green*/   \
+      << std::endl;                                                        \
+   }                                                                       \
+   else                                                                    \
+   {                                                                       \
+      std::cout << std::setw(10)                                           \
+      << std::left << "\x1b[38;5;160m   FAILED \x1b[0m" /* colored in Red*/\
+      << std::endl;                                                        \
+   }                                                                       \
+} /* Coloring valid for *nix systems. */
+
+BEGIN_TEST(signal_decoder, set_single_byte_signal)
 {
     SignalDecoder::signal s;
     s.byte_order = SignalDecoder::byte_order::INTEL;
     s.len = 8;
-    s.start_bit = 0;
+    s.start_bit = 8;
     SignalDecoder signalDecoder;
-    signalDecoder.set_signal(s, 0x55);
-    return signalDecoder.data == nullptr;
-}
+    signalDecoder.set_signal(&s, (uint64_t)-1);
+    EXPECT_EQ(signalDecoder.data_single, 0xFF<<8);
 
+    signalDecoder.set_signal(&s, 0xAA);
+    EXPECT_EQ(signalDecoder.data_single, 0xAA<<8);
+
+}
+END_TEST
+
+BEGIN_TEST(signal_decoder, set_multi_byte_signal)
+{
+    SignalDecoder::signal s;
+    s.byte_order = SignalDecoder::byte_order::INTEL;
+    s.len = 15;
+    s.start_bit = 6;
+    SignalDecoder signalDecoder;
+    signalDecoder.set_signal(&s, (uint64_t)-1);
+    EXPECT_EQ(signalDecoder.data_single, 0x7FFF<<s.start_bit);
+
+    signalDecoder.set_signal(&s, 0xAA);
+    EXPECT_EQ(signalDecoder.data_single, 0xAA<<s.start_bit);
+
+}
+END_TEST
+
+BEGIN_TEST(signal_decoder, get_multi_byte_signal)
+{
+    SignalDecoder::signal s;
+    s.byte_order = SignalDecoder::byte_order::INTEL;
+    s.len = 15;
+    s.start_bit = 6;
+    SignalDecoder signalDecoder;
+    signalDecoder.data_single = 0x7FFF << s.start_bit;
+    uint64_t val = 0;
+    signalDecoder.get_signal(&s, &val);
+    EXPECT_EQ(val, 0x7FFF);
+
+    signalDecoder.set_signal(&s, 0xAA);
+    EXPECT_EQ(signalDecoder.data_single, 0xAA<<s.start_bit);
+
+}
+END_TEST
+
+BEGIN_TEST(signal_decoder, integration)
+{
+    SignalDecoder::signal s1;
+    s1.byte_order = SignalDecoder::byte_order::INTEL;
+    s1.len = 19;
+    s1.start_bit = 6;
+
+    SignalDecoder::signal s2;
+    s2.byte_order = SignalDecoder::byte_order::INTEL;
+    s2.len = 6;
+    s2.start_bit = 0;
+
+    SignalDecoder signalDecoder;
+    int value1 = -55;
+    signalDecoder.set_signal(&s1, value1);
+    int value2 = 22;
+    signalDecoder.set_signal(&s2, value2);
+
+    int64_t out = 0;
+    signalDecoder.get_signal_signed(&s1, &out);
+    EXPECT_EQ(value1, out);
+    signalDecoder.get_signal_signed(&s2, &out);
+    EXPECT_EQ(value2, out);
+}
+END_TEST
+
+BEGIN_TEST(signal_decoder, unsigned_integration)
+{
+    SignalDecoder::signal s;
+    s.byte_order = SignalDecoder::byte_order::INTEL;
+    s.len = 15;
+    s.start_bit = 6;
+    SignalDecoder signalDecoder;
+    int value = 5553;
+    signalDecoder.set_signal(&s, value);
+    uint64_t out = 0;
+    signalDecoder.get_signal(&s, &out);
+    EXPECT_EQ(value, out);
+
+    SignalDecoder::signal s1;
+    s1.byte_order = SignalDecoder::byte_order::INTEL;
+    s1.len = 19;
+    s1.start_bit = 9;
+
+    SignalDecoder::signal s2;
+    s2.byte_order = SignalDecoder::byte_order::INTEL;
+    s2.len = 6;
+    s2.start_bit = 0;
+
+    int value1 = 55412;
+    signalDecoder.set_signal(&s1, value1);
+    int value2 = 22;
+    signalDecoder.set_signal(&s2, value2);
+
+    signalDecoder.get_signal(&s1, &out);
+    EXPECT_EQ(value1, out);
+    signalDecoder.get_signal(&s2, &out);
+    EXPECT_EQ(value2, out);
+}
+END_TEST
 int main()
 {
+
+    RUN_TEST(signal_decoder, set_single_byte_signal);
+    RUN_TEST(signal_decoder, set_multi_byte_signal);
+    RUN_TEST(signal_decoder, get_multi_byte_signal);
+    RUN_TEST(signal_decoder, integration);
+    RUN_TEST(signal_decoder, unsigned_integration);
+
+    //test_signal_decoder_on_single_signal();
     std::cout << "init test env \n";
 
     auto txFrameMode = txFrameModes[0];    

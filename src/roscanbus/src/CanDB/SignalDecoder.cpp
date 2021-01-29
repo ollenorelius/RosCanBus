@@ -70,3 +70,32 @@ int SignalDecoder::get_signal(struct signal *sig, uint64_t *val)
     return 0;
 }
 
+int SignalDecoder::get_signal_signed(struct signal *sig, int64_t *sval)
+{
+	/* Loop through bit by bit */
+	*sval = 0;
+	uint64_t val = 0;
+	int j = sig->start_bit;
+	for(int i = 0; i < sig->len; i++)
+	{
+		int byte_i = (j & (~0x7)) / 8;
+		int bit_i = j & 0x7;
+
+		int bit = this->data[byte_i] & (1 << bit_i);
+
+		if(bit)
+			val |= (1 << i);
+
+		if(sig->byte_order == MOTOROLA)
+		{
+			if((j & 0x7) == 7)
+				j -= 15;
+			else
+				j++;
+		}
+		else /* INTEL */
+			j++;
+	}
+	*sval = SignalDecoder::two_complement(val, sig->len);
+    return 0;
+}
