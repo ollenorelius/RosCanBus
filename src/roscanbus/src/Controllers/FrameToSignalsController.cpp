@@ -70,7 +70,7 @@ std::map<int, double> FrameToSignalsController::decodeCanFrame(FrameData frameDa
     }
     
 
-    std::vector<int>* signals = frameDefinition.getSignals();    
+    const std::vector<int>* signals = frameDefinition.getSignals();    
 
     long long int data = *(long long int*)(frameData.data);
 

@@ -36,6 +36,9 @@ bool testDecodeMotorCanFrame();
 bool testDecodePowerStatusCanFrame();
 bool testDecodeNonByteAlignment();
 
+const static std::string DB = "signaldb.xlsx";
+const static std::string NODE = "ADAS";
+
 int main()
 {
     testCreateFramesToSignalsController();
@@ -47,7 +50,7 @@ int main()
 bool testCreateFramesToSignalsController()
 {
     reinit();
-    std::unique_ptr<CanGwModel> canGwModel = std::make_unique<CanGwModel>();
+    std::unique_ptr<CanGwModel> canGwModel = std::make_unique<CanGwModel>(DB, NODE);
     auto ft2s = FrameToSignalsController(canGwInterfaces->getCanInterface(),
                                          canGwModel->getCanSignalCollectionModel(),
                                          canGwModel->getRxCanFramesCollectionModel(),
@@ -59,7 +62,7 @@ bool testDecodeOnSonarCanFrame()
 {       
     reinit();
 
-    std::unique_ptr<CanGwModel> canGwModel = std::make_unique<CanGwModel>();
+    std::unique_ptr<CanGwModel> canGwModel = std::make_unique<CanGwModel>(DB, NODE);
     auto ft2s = FrameToSignalsController(canGwInterfaces->getCanInterface(),
                                          canGwModel->getCanSignalCollectionModel(),
                                          canGwModel->getRxCanFramesCollectionModel(),
@@ -104,7 +107,7 @@ bool testDecodeWheelSpeedCanFrame()
 {
     reinit();
 
-    std::unique_ptr<CanGwModel> canGwModel = std::make_unique<CanGwModel>();
+    std::unique_ptr<CanGwModel> canGwModel = std::make_unique<CanGwModel>(DB, NODE);
     auto ft2s = FrameToSignalsController(canGwInterfaces->getCanInterface(),
                                          canGwModel->getCanSignalCollectionModel(),
                                          canGwModel->getRxCanFramesCollectionModel(),
@@ -141,7 +144,7 @@ bool testDecodeMotorCanFrame()
 {
     reinit();
 
-    std::unique_ptr<CanGwModel> canGwModel = std::make_unique<CanGwModel>();
+    std::unique_ptr<CanGwModel> canGwModel = std::make_unique<CanGwModel>(DB, NODE);
     auto ft2s = FrameToSignalsController(canGwInterfaces->getCanInterface(),
                                          canGwModel->getCanSignalCollectionModel(),
                                          canGwModel->getRxCanFramesCollectionModel(),
@@ -177,7 +180,7 @@ bool testDecodePowerStatusCanFrame()
 {
     reinit();
 
-    std::unique_ptr<CanGwModel> canGwModel = std::make_unique<CanGwModel>();
+    std::unique_ptr<CanGwModel> canGwModel = std::make_unique<CanGwModel>(DB, NODE);
     auto ft2s = FrameToSignalsController(canGwInterfaces->getCanInterface(),
                                          canGwModel->getCanSignalCollectionModel(),
                                          canGwModel->getRxCanFramesCollectionModel(),
@@ -213,7 +216,7 @@ bool testDecodeNonByteAlignment()
 {    
     reinit();
 
-    std::unique_ptr<CanGwModel> canGwModel = std::make_unique<CanGwModel>();
+    std::unique_ptr<CanGwModel> canGwModel = std::make_unique<CanGwModel>(DB, NODE);
     auto ft2s = FrameToSignalsController(canGwInterfaces->getCanInterface(),
                                          canGwModel->getCanSignalCollectionModel(),
                                          canGwModel->getRxCanFramesCollectionModel(),
@@ -223,7 +226,7 @@ bool testDecodeNonByteAlignment()
     fd.id = 0x11;
     fd.dlc = 8;
     Frame frameDefinition = canGwModel->getRxCanFramesCollectionModel()->at(fd.id); 
-    std::vector<int>* signals = frameDefinition.getSignals();
+    const std::vector<int>* signals = frameDefinition.getSignals();
     int nrSignals = signals->size(); 
 
     SignalDecoder canDataPackage;
@@ -295,6 +298,6 @@ bool testDecodeCanFrame()
 
 void reinit()
 {
-    canGwModel = std::make_unique<CanGwModel>();
+    canGwModel = std::make_unique<CanGwModel>(DB, NODE);
     canGwInterfaces = std::make_unique<CanGwInterfaces>(canGwModel.get());
 }

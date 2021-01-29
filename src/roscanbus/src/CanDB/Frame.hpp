@@ -15,13 +15,13 @@ public:
     Frame(); 
 
 
-    std::string getName();
-    int getFrameId();
-    double getPeriod();
-    int getDlc();
+    std::string getName() const;
+    int getFrameId() const;
+    double getPeriod() const;
+    int getDlc() const;
     void setDlc(int dlc);
-    std::vector<int>* getSignals();
-    std::string getDescription();
+    const std::vector<int>* getSignals() const;
+    std::string getDescription() const;
 //    void decodeCanFrame(can_frame* canFrame);
 
 private:

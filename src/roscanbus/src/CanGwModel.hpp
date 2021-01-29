@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <map>
+#include <string>
 
 #include "CanDB/Frame.hpp"
 #include "CanDB/SignalDefinition.hpp"
@@ -16,8 +17,8 @@
 class CanGwModel
 {
 public:
-    CanGwModel();
-    CanGwModel(int argc, char** argv);
+    CanGwModel(std::string dbFileName, std::string nodeName);
+    CanGwModel(int argc, char** argv, std::string dbFileName, std::string nodeName);
     ~CanGwModel() {};
     CanSignalCollectionModel* getCanSignalCollectionModel();
     std::map<int, Frame>* getRxCanFramesCollectionModel();

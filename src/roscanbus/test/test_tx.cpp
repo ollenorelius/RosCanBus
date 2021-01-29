@@ -5,7 +5,6 @@
 #include <memory>
 #include <map>
 
-
 #include "../src/Controllers/FrameToSignalsController.hpp"
 
 #include "../src/CanDB/FrameReader.hpp"
@@ -16,6 +15,7 @@
 #include "../src/CanDB/Frame.hpp"
 #include "../src/CanDB/SignalDecoder.hpp"
 
+//#define private//testable public
 #include "../src/Controllers/CanTransmitterController.hpp"
 
 #include "../src/CanGwInterfaces.hpp"
@@ -197,6 +197,31 @@ BEGIN_TEST(signal_decoder, unsigned_integration)
     EXPECT_EQ(value2, out);
 }
 END_TEST
+
+BEGIN_TEST(can_transmitter_controller, pack_data)
+{
+    std::unique_ptr<Interfaces::CAN> vcan0Interface = std::make_unique<Interfaces::CAN> ("vcan0");
+    /*CanTransmitterController canTransmitterController(vcan0Interface.get(),
+                                                       canGwModel->getCanSignalCollectionModel(),
+                                                       canGwModel->getTxCanFramesCollectionModel(),
+                                                       canGwModel->getCanFrameEmitTimerModel(),
+                                                       canGwModel->getCanSignalDefinitionCollectionModel(),
+                                                       canGwModel->getDummyTickModel());
+*/
+    //canTransmitterController.packFrameData()
+    EXPECT_EQ(0,1);
+}
+END_TEST
+
+BEGIN_TEST(can_transmitter_controller, calc_dlc)
+{
+
+    EXPECT_EQ(0,1);
+}
+END_TEST
+
+
+
 int main()
 {
 
@@ -205,6 +230,12 @@ int main()
     RUN_TEST(signal_decoder, get_multi_byte_signal);
     RUN_TEST(signal_decoder, integration);
     RUN_TEST(signal_decoder, unsigned_integration);
+    
+    canGwModel = std::make_unique<CanGwModel>("test_signaldb.xlsx", "ADAS");
+    canGwInterfaces = std::make_unique<CanGwInterfaces>(canGwModel.get());
+    std::cout << "asdf\n";
+    RUN_TEST(can_transmitter_controller, pack_data)
+    RUN_TEST(can_transmitter_controller, calc_dlc)
 
     //test_signal_decoder_on_single_signal();
     std::cout << "init test env \n";

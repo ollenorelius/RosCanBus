@@ -2,18 +2,18 @@
 #include "CanDB/FrameReader.hpp"
 #include "CanDB/SignalReader.hpp"
 
-CanGwModel::CanGwModel(int argc, char** argv) : 
+CanGwModel::CanGwModel(int argc, char** argv, std::string dbFileName, std::string nodeName) : 
     dummyTickModel_(std::make_unique<DummyTickModel>())
   
 {
     rosNodeModel_ = std::make_unique<RosNodeModel>(argc, argv);
-    FrameReader FrameReader("signaldb.xlsx");
-    txCanFramesCollectionModel_ = std::move(FrameReader.getTxFrames("ADAS"));
-    rxCanFramesCollectionModel_ = std::move(FrameReader.getRxFrames("ADAS"));
+    FrameReader FrameReader(dbFileName);
+    txCanFramesCollectionModel_ = std::move(FrameReader.getTxFrames(nodeName));
+    rxCanFramesCollectionModel_ = std::move(FrameReader.getRxFrames(nodeName));
     
     canFrameEmitTimerModel_ = std::make_unique<CanFrameEmitTimerModel> (this->getTxCanFramesCollectionModel());
 
-    SignalReader signalReader("signaldb.xlsx");
+    SignalReader signalReader(dbFileName);
     canSignalDefinitionCollectionModel_ = std::move(signalReader.getSignalDefinitions());
 
     canSignalCollectionModel_ = signalReader.createCanSignalCollectionModel();
@@ -60,14 +60,15 @@ DummyTickModel* CanGwModel::getDummyTickModel()
     return dummyTickModel_.get();
 }
 
-CanGwModel::CanGwModel() 
+CanGwModel::CanGwModel(std::string dbFileName, std::string nodeName) 
 {
-    FrameReader FrameReader("signaldb.xlsx");
-    txCanFramesCollectionModel_ = std::move(FrameReader.getTxFrames("ADAS"));
-    rxCanFramesCollectionModel_ = std::move(FrameReader.getRxFrames("ADAS"));
+    FrameReader FrameReader(dbFileName);
+    txCanFramesCollectionModel_ = std::move(FrameReader.getTxFrames(nodeName));
+    rxCanFramesCollectionModel_ = std::move(FrameReader.getRxFrames(nodeName));
 
-    SignalReader signalReader("signaldb.xlsx");
+    SignalReader signalReader(dbFileName);
     canSignalDefinitionCollectionModel_ = std::move(signalReader.getSignalDefinitions());
 
     commandLineModel_ = std::make_unique<CommandLineModel>(0, nullptr);
 }
+

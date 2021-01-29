@@ -26,9 +26,12 @@ public:
                               std::map<int, SignalDefinition>* canSignalDefinitionCollectionModel,
                               DummyTickModel* dummyTickModel);
 
-    void send();
 
-private:     
+private://testable
+    void send();
+    uint64_t packFrameData(const Frame& frame);
+    int getDLC(const Frame& frame);
+
     Interfaces::CAN*            canInterface_;
     CanSignalCollectionModel*   canSignalCollectionModel_;
     std::map<int, Frame>*       txCanFramesCollectionModel_;

@@ -1,31 +1,31 @@
 #include "Frame.hpp"
 
-std::string Frame::getName() 
+std::string Frame::getName() const
 {
     return name_;
 }
 
-int Frame::getFrameId() 
+int Frame::getFrameId() const
 {
     return frameId_;
 }
 
-double Frame::getPeriod() 
+double Frame::getPeriod() const
 {
     return period_;
 }
 
-std::vector<int>* Frame::getSignals() 
+const std::vector<int>* Frame::getSignals() const
 {
     return &signals_;
 }
 
-std::string Frame::getDescription() 
+std::string Frame::getDescription() const
 {
     return description_;
 }
 
-int Frame::getDlc()
+int Frame::getDlc() const
 {
     return dlc_;
 }

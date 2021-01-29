@@ -19,7 +19,7 @@ int main(int argc, char** argv)
     std::unique_ptr<CanGwModel> canGwModel;
     try 
     {
-        canGwModel = std::make_unique<CanGwModel>(argc, argv);
+        canGwModel = std::make_unique<CanGwModel>(argc, argv, "signaldb.xlsx", "ADAS");
     }
     catch (xlnt::exception e)
     {
