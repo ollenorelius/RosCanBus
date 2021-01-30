@@ -201,14 +201,14 @@ END_TEST
 BEGIN_TEST(can_transmitter_controller, pack_data)
 {
     std::unique_ptr<Interfaces::CAN> vcan0Interface = std::make_unique<Interfaces::CAN> ("vcan0");
-    /*CanTransmitterController canTransmitterController(vcan0Interface.get(),
+    CanTransmitterController canTransmitterController(vcan0Interface.get(),
                                                        canGwModel->getCanSignalCollectionModel(),
                                                        canGwModel->getTxCanFramesCollectionModel(),
                                                        canGwModel->getCanFrameEmitTimerModel(),
                                                        canGwModel->getCanSignalDefinitionCollectionModel(),
                                                        canGwModel->getDummyTickModel());
-*/
-    //canTransmitterController.packFrameData()
+
+    canTransmitterController.packFrameData()
     EXPECT_EQ(0,1);
 }
 END_TEST

@@ -2,21 +2,11 @@
 #include "CanDB/FrameReader.hpp"
 #include "CanDB/SignalReader.hpp"
 
-CanGwModel::CanGwModel(int argc, char** argv, std::string dbFileName, std::string nodeName) : 
-    dummyTickModel_(std::make_unique<DummyTickModel>())
+CanGwModel::CanGwModel(int argc, char** argv, std::string dbFileName, std::string nodeName) 
   
 {
+    CanGwModel(dbFileName, nodeName);
     rosNodeModel_ = std::make_unique<RosNodeModel>(argc, argv);
-    FrameReader FrameReader(dbFileName);
-    txCanFramesCollectionModel_ = std::move(FrameReader.getTxFrames(nodeName));
-    rxCanFramesCollectionModel_ = std::move(FrameReader.getRxFrames(nodeName));
-    
-    canFrameEmitTimerModel_ = std::make_unique<CanFrameEmitTimerModel> (this->getTxCanFramesCollectionModel());
-
-    SignalReader signalReader(dbFileName);
-    canSignalDefinitionCollectionModel_ = std::move(signalReader.getSignalDefinitions());
-
-    canSignalCollectionModel_ = signalReader.createCanSignalCollectionModel();
     commandLineModel_ = std::make_unique<CommandLineModel>(argc, argv);
 }
 
@@ -70,5 +60,9 @@ CanGwModel::CanGwModel(std::string dbFileName, std::string nodeName)
     canSignalDefinitionCollectionModel_ = std::move(signalReader.getSignalDefinitions());
 
     commandLineModel_ = std::make_unique<CommandLineModel>(0, nullptr);
+
+    canFrameEmitTimerModel_ = std::make_unique<CanFrameEmitTimerModel> (this->getTxCanFramesCollectionModel());
+    dummyTickModel_ = std::make_unique<DummyTickModel>();
+    canSignalCollectionModel_ = signalReader.createCanSignalCollectionModel();
 }
 
