@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stdint.h>
+#include "../Enumerators.hpp"
 
 class SignalDecoder
 {
@@ -11,6 +12,8 @@ public:
     {
         uint8_t start_bit, len;
         enum byte_order byte_order;
+        SIGNAL_TYPE signal_type;
+
     };
 
     static int64_t two_complement(uint64_t & v, const int & bitlen );

@@ -15,7 +15,7 @@
 #include "../src/CanDB/Frame.hpp"
 #include "../src/CanDB/SignalDecoder.hpp"
 
-//#define private//testable public
+#define private public
 #include "../src/Controllers/CanTransmitterController.hpp"
 
 #include "../src/CanGwInterfaces.hpp"
@@ -208,15 +208,30 @@ BEGIN_TEST(can_transmitter_controller, pack_data)
                                                        canGwModel->getCanSignalDefinitionCollectionModel(),
                                                        canGwModel->getDummyTickModel());
 
-    canTransmitterController.packFrameData()
-    EXPECT_EQ(0,1);
+    canGwModel->getCanSignalCollectionModel()->getCanSignal(34)->setValue(0xAA);
+    canGwModel->getCanSignalCollectionModel()->getCanSignal(35)->setValue(0x55);
+    Frame frame = canGwModel->getTxCanFramesCollectionModel()->at(9);
+    uint64_t data = canTransmitterController.packFrameData(frame);
+    std::cout << data << "\n";
+    EXPECT_EQ(data,0x55AA);
 }
 END_TEST
 
 BEGIN_TEST(can_transmitter_controller, calc_dlc)
 {
+    std::unique_ptr<Interfaces::CAN> vcan0Interface = std::make_unique<Interfaces::CAN> ("vcan0");
+    CanTransmitterController canTransmitterController(vcan0Interface.get(),
+                                                       canGwModel->getCanSignalCollectionModel(),
+                                                       canGwModel->getTxCanFramesCollectionModel(),
+                                                       canGwModel->getCanFrameEmitTimerModel(),
+                                                       canGwModel->getCanSignalDefinitionCollectionModel(),
+                                                       canGwModel->getDummyTickModel());
 
-    EXPECT_EQ(0,1);
+    canGwModel->getCanSignalCollectionModel()->getCanSignal(34)->setValue(0xAA);
+    canGwModel->getCanSignalCollectionModel()->getCanSignal(35)->setValue(0x55);
+    Frame frame = canGwModel->getTxCanFramesCollectionModel()->at(9);
+    
+    EXPECT_EQ(canTransmitterController.getDLC(frame),2);
 }
 END_TEST
 
@@ -233,7 +248,7 @@ int main()
     
     canGwModel = std::make_unique<CanGwModel>("test_signaldb.xlsx", "ADAS");
     canGwInterfaces = std::make_unique<CanGwInterfaces>(canGwModel.get());
-    std::cout << "asdf\n";
+    std::cout << "asd4f\n";
     RUN_TEST(can_transmitter_controller, pack_data)
     RUN_TEST(can_transmitter_controller, calc_dlc)
 
@@ -244,18 +259,18 @@ int main()
 
     //start txFrameCollection with choosen mode
     //std::unique_ptr<std::map<int, Frame>> txFrames = std::make_unique<std::map<int, Frame>> ();
-
-    FrameReader FrameReader("signaldb.xlsx");
-    
-    //std::map<int, Frame>    
-    std::unique_ptr<std::map<int,Frame>> rxCanFramesCollectionModel = std::move(FrameReader.getRxFrames("ADAS"));
-    std::unique_ptr<std::map<int,Frame>> txCanFramesCollectionModel = std::move(FrameReader.getTxFrames("ADAS"));
-        
     //signal definitions 
     SignalReader signalReader("signaldb.xlsx");
     //definitions
     auto canSignalDefinitionCollectionModel = std::move(signalReader.getSignalDefinitions());
     auto canSignalCollectionModel = signalReader.createCanSignalCollectionModel();
+
+    FrameReader FrameReader("signaldb.xlsx", canSignalDefinitionCollectionModel.get());
+    
+    //std::map<int, Frame>    
+    std::unique_ptr<std::map<int,Frame>> rxCanFramesCollectionModel = std::move(FrameReader.getRxFrames("ADAS"));
+    std::unique_ptr<std::map<int,Frame>> txCanFramesCollectionModel = std::move(FrameReader.getTxFrames("ADAS"));
+        
  
     std::unique_ptr<Interfaces::CAN> vcan0Interface = std::make_unique<Interfaces::CAN> ("vcan0");
     std::unique_ptr<CanFrameEmitTimerModel> canFrameEmitTimerModel = std::make_unique<CanFrameEmitTimerModel> (txCanFramesCollectionModel.get());

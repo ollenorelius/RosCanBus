@@ -27,10 +27,10 @@ class FrameToSignalsController
 
     std::map<int, double> decodeCanFrame(FrameData frameData);
 private:
-
+    std::map<int, SignalDecoder::signal> getSignalPositions(int frameId) const;
+    std::map<int, double> getSignalValues(const std::map<int, SignalDecoder::signal>& signalPositions, const FrameData& framedata) const;
     Interfaces::CAN* canInterface_;
     CanSignalCollectionModel* signalCollectionModel_;
     std::map<int, Frame>* rxCanFramesCollectionModel_;
     std::map<int, SignalDefinition>* canSignalDefinitionCollectionModel_;
-    std::unique_ptr<SignalDecoder> signalDecoder_;
 };

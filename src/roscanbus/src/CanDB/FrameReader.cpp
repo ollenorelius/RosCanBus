@@ -1,6 +1,9 @@
 #include "FrameReader.hpp"
+#include "SignalDefinition.hpp"
  
-FrameReader::FrameReader(std::string path) 
+FrameReader::FrameReader(std::string path,
+                         std::map<int, SignalDefinition>* signalDefinitionCollectionModel) :
+    signalDefinitionCollectionModel_(signalDefinitionCollectionModel)
 {
     document_.load(path);
 }
@@ -73,11 +76,25 @@ Frame FrameReader::createDBCanFrame(xlnt::cell_vector row)
     while(getline(ss, tmp, ',')){
         signals.push_back(std::stoi(tmp));
     }
-
-    return Frame(row[NAME].value<std::string>(),
+    Frame frame = Frame(row[NAME].value<std::string>(),
                       std::stoi(row[ID].value<std::string>(), nullptr, 0),
                       signals,
                       row[PERIOD].value<double>(),
                       row[DESC].value<std::string>());
+
+    updateDLC(frame);
+    return frame;
 }
 
+void FrameReader::updateDLC(Frame& frame) 
+{
+        int dlc = 0;   
+        auto signals = frame.getSignals();
+        
+        for (int signalIndex : *signals)
+        {
+            dlc += signalDefinitionCollectionModel_->at(signalIndex).getLength();
+        }
+        dlc = dlc / 8 + (dlc % 8 != 0); // divide by 8 and round up.
+        frame.setDlc(dlc);
+}

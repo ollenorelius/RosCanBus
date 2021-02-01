@@ -7,6 +7,7 @@
 #include "../EventSignal.hpp"
 #include "../Models/CanSignalModel.hpp"
 #include "../Models/CanSignalCollectionModel.hpp"
+#include <string.h> // memcpy
 
 FrameToSignalsController::FrameToSignalsController(Interfaces::CAN* canInterface,
                              CanSignalCollectionModel* signalCollectionModel,
@@ -15,8 +16,7 @@ FrameToSignalsController::FrameToSignalsController(Interfaces::CAN* canInterface
     canInterface_(canInterface),
     signalCollectionModel_(signalCollectionModel),
     rxCanFramesCollectionModel_(rxCanFramesCollectionModel),
-    canSignalDefinitionCollectionModel_(canSignalDefinitionCollectionModel),
-    signalDecoder_(std::make_unique<SignalDecoder> ())
+    canSignalDefinitionCollectionModel_(canSignalDefinitionCollectionModel)
 {
     auto decodeCanFrameCallback = [this]()
     {
@@ -36,71 +36,76 @@ std::map<int, double> FrameToSignalsController::decodeCanFrame(FrameData frameDa
      * data before I can make sure it works generally.
      */
     std::map<int, double> signalValues;
+
     
     try
     {
         Frame frameDefinition = rxCanFramesCollectionModel_->at(frameData.id);
+        if (frameData.dlc != frameDefinition.getDlc())
+        {
+            std::cout << "Bad DLC received! " << frameData.dlc << " != " << frameDefinition.getDlc() << "\n";
+            return std::map<int, double>();
+        }
     }
     catch (std::out_of_range e)
     {
-        return signalValues;
+        return std::map<int, double>();
     }
 
-    Frame frameDefinition = rxCanFramesCollectionModel_->at(frameData.id);
 
-    if (frameDefinition.getDlc() == 0)
-    {
-        int dlc = 0;   
-        auto signals = frameDefinition.getSignals();
-        
-        for (int signalIndex : *signals)
-        {
-            dlc += canSignalDefinitionCollectionModel_->at(signalIndex).getLength();
-        }
-        dlc = dlc / 8 + (dlc % 8 != 0); // divide by 8 and round up.
-        Frame frameToEdit = rxCanFramesCollectionModel_->at(frameData.id);
-        frameToEdit.setDlc(dlc);
-        rxCanFramesCollectionModel_->at(frameData.id) = frameToEdit;
-    }
+    // pull out signalvalue for each
 
-    if (frameData.dlc != frameDefinition.getDlc())
-    {
-        std::cout << "Bad DLC received! " << frameData.dlc << " != " << frameDefinition.getDlc() << "\n";
-        return signalValues;
-    }
+    std::map<int, SignalDecoder::signal> signalPositions = getSignalPositions(frameData.id);
+    return getSignalValues(signalPositions, frameData);
+}
+
+std::map<int, SignalDecoder::signal> FrameToSignalsController::getSignalPositions(int frameId) const
+{
+    std::map<int, SignalDecoder::signal> signalPositions;
+    Frame frameDefinition = rxCanFramesCollectionModel_->at(frameId);
+
     
 
     const std::vector<int>* signals = frameDefinition.getSignals();    
 
-    long long int data = *(long long int*)(frameData.data);
-
-    int i = 0 ;
+    // Create map of SignalDecoder::signal-s
+    int rolling_start = 0;
     for (int signalId : *signals)
-    {
+    {   // Could be cached for performance
         SignalDefinition signalDefinition = canSignalDefinitionCollectionModel_->at(signalId);
         int length = signalDefinition.getLength();  
 
         SignalDecoder::signal canSignal;       
         canSignal.byte_order = SignalDecoder::byte_order::INTEL;
-        canSignal.len        = length;     
+        canSignal.len        = length;
+        canSignal.signal_type = signalDefinition.getSignalType();
 
-        long long int signalBits = data & ((1 << length)-1);        
-        data = data >> length; // Then shift out those bits
-
-        canSignal.start_bit  = length * (i++); 
-        
-        signalDecoder_->set_signal(&canSignal, signalBits);
-        
-        uint64_t output = 0;
-        signalDecoder_->get_signal(&canSignal, &output);
-
-        if(signalDefinition.getSignalType() == SIGNAL_TYPE::SIGNED) 
-        {
-            //std::cout << "SIGNED VAL: " << signalDecoder_->two_complement(output, length) << std::endl;
-            signalValues.insert(std::pair<int, double> (signalId, signalDefinition.getScaler() * signalDecoder_->two_complement(output, length)));
-        }
-        else signalValues.insert(std::pair<int, double> (signalId, signalDefinition.getScaler() * output));
+        canSignal.start_bit = rolling_start;
+        signalPositions[signalId] = canSignal;
+        rolling_start += length;
     }
+}
 
+std::map<int, double> FrameToSignalsController::getSignalValues(const std::map<int, SignalDecoder::signal>& signalPositions, const FrameData& frameData) const
+{
+    SignalDecoder signalDecoder;
+    memcpy(signalDecoder.data, frameData.data, frameData.dlc);
+    std::map<int, double> signalValues;
+
+    for (std::pair<int, SignalDecoder::signal> signalPosition : signalPositions)
+    {
+        if (signalPosition.second.signal_type == SIGNAL_TYPE::SIGNED)
+        {
+            int64_t val = 0;
+            signalDecoder.get_signal_signed(&signalPosition.second, &val);
+            signalValues[signalPosition.first] = static_cast<double>(val);
+        }
+        else if (signalPosition.second.signal_type == SIGNAL_TYPE::UNSIGNED)
+        {
+            uint64_t val = 0;
+            signalDecoder.get_signal(&signalPosition.second, &val);
+            signalValues[signalPosition.first] = static_cast<double>(val);
+        }
+    }
     return signalValues;
 }

@@ -1,3 +1,5 @@
+#pragma once 
+
 enum class SIGNAL_TYPE
 {
     UNSIGNED,

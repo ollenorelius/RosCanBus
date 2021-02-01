@@ -52,12 +52,13 @@ DummyTickModel* CanGwModel::getDummyTickModel()
 
 CanGwModel::CanGwModel(std::string dbFileName, std::string nodeName) 
 {
-    FrameReader FrameReader(dbFileName);
-    txCanFramesCollectionModel_ = std::move(FrameReader.getTxFrames(nodeName));
-    rxCanFramesCollectionModel_ = std::move(FrameReader.getRxFrames(nodeName));
-
     SignalReader signalReader(dbFileName);
     canSignalDefinitionCollectionModel_ = std::move(signalReader.getSignalDefinitions());
+
+    FrameReader frameReader(dbFileName, canSignalDefinitionCollectionModel_.get());
+    txCanFramesCollectionModel_ = std::move(frameReader.getTxFrames(nodeName));
+    rxCanFramesCollectionModel_ = std::move(frameReader.getRxFrames(nodeName));
+
 
     commandLineModel_ = std::make_unique<CommandLineModel>(0, nullptr);
 
