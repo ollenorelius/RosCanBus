@@ -65,6 +65,9 @@ void Interfaces::CAN::writeCanFrame(const FrameData& fd)
         
     frame.can_id = fd.id;
     frame.can_dlc = fd.dlc;  
+    frame.__pad = 0;
+    frame.__res0 = 0;
+    frame.__res1 = 0;
     
     //cpy message
     memcpy(frame.data, fd.data, fd.dlc);

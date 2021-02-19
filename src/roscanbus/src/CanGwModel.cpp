@@ -2,10 +2,8 @@
 #include "CanDB/FrameReader.hpp"
 #include "CanDB/SignalReader.hpp"
 
-CanGwModel::CanGwModel(int argc, char** argv, std::string dbFileName, std::string nodeName) 
-  
+CanGwModel::CanGwModel(int argc, char** argv, std::string dbFileName, std::string nodeName) : CanGwModel(dbFileName, nodeName)
 {
-    CanGwModel(dbFileName, nodeName);
     rosNodeModel_ = std::make_unique<RosNodeModel>(argc, argv);
     commandLineModel_ = std::make_unique<CommandLineModel>(argc, argv);
 }

@@ -84,6 +84,7 @@ std::map<int, SignalDecoder::signal> FrameToSignalsController::getSignalPosition
         signalPositions[signalId] = canSignal;
         rolling_start += length;
     }
+    return signalPositions;
 }
 
 std::map<int, double> FrameToSignalsController::getSignalValues(const std::map<int, SignalDecoder::signal>& signalPositions, const FrameData& frameData) const
